@@ -59,7 +59,7 @@ int main() {
 }
 ```
 
-# Avoid memory leak
+# Dealocate the memory
 T avoid memory leak, delete all pointers in the class.
 
 ```

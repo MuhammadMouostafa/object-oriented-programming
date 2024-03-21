@@ -4,7 +4,3 @@ Object-oriented programming (OOP) is a computer programming model that organizes
 # OOP Concepts
 
 ![](/assets/images/oop-concepts.png)
-
-# Object Oriented Princibles
-
-# Designe Paterns
