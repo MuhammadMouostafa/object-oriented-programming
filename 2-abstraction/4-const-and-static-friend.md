@@ -116,20 +116,3 @@ public:
     {}
 };
 ```
-
-# static
-
-## static data member
-
-## static member function
-
-
-
-
-# friend
-
-## friend class
-## frind member function
-## friend global function
-
-    
