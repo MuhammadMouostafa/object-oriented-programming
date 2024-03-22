@@ -71,7 +71,8 @@ public:
     }
     void print()
     {
-        cout<< type << ", " << color << ", " << max_speed << ", " << *current_speed << ", " << current_speed << endl;
+        cout<< type << ", " << color << ", " << max_speed << ", "
+        << *current_speed << ", " << current_speed << endl;
     }
 
     ~Car()
@@ -153,7 +154,8 @@ public:
     }
     void print()
     {
-        cout<< type << ", " << color << ", " << max_speed << ", " << *current_speed << ", " << current_speed << endl;
+        cout<< type << ", " << color << ", " << max_speed << ", "
+        << *current_speed << ", " << current_speed << endl;
     }
 
     ~Car()
