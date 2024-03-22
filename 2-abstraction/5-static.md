@@ -12,6 +12,8 @@ Static data members are class members that are declared using static keywords. A
 static data_type data_member_name;
 // Definitoin outside the class
 data_type class_name::data_member_name = initial_value;
+// Access outside the class
+class_name::data_member_name
 ```
 
 ### See the following example:
