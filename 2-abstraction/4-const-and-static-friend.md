@@ -100,10 +100,22 @@ int main()
 }
 ```
 
+# Const Member Variable
+Const member variable also can be initialiez in definition or in intializer list
 
+```
+class Car
+{
+private:
+    const string type = "Nissan";
+    const string engin_type;
 
-# const member variables
-
+public:
+    Car(string engin_typer):
+    engin_type(engin_type)
+    {}
+};
+```
 
 # static
 
