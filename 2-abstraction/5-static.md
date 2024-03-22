@@ -39,6 +39,7 @@ int main()
 {
     Car car1;
     Car car2;
+    Car::number_of_cars++; // can be access (just for example)
     Car car3;
 }
 ```
