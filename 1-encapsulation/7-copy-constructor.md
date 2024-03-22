@@ -32,7 +32,7 @@ A Copy Constructor creates a new object, which is an exact copy of the existing 
 
 > Note: In all the previous examples the compiler will creates the default copy constructor to perform shallow copy at compile time and to make deep copy we need to override the copy constructor.
 
-> Avoid the last two cases because of Return Value Optimization (RVO), which is a part of the C++ standard. The compiler is allowed to avoid the copy (or move) operation in certain scenarios for performance reasons, even if this would mean that the copy (or move) constructor and the destructor won’t get called.
+> Avoid the last two cases because of Return Value Optimization (RVO), which is a part of the C++ standard. The compiler is allowed to avoid the copy (or move) operation in certain scenarios for performance reasons, even if this would mean that the copy (or move) constructor and the destructor won’t get called and in our case shllow copy will happen even if we create copy constructor, so its based on the compiler.
 
 # Default Copy Contructor
 The default copy constructor created by the compiler to make shallow copy.
@@ -161,10 +161,7 @@ public:
 
     ~Car()
     {
-        // If you try to delete the pointer an exception will happen
-        // delete current_speed;
-
-        // now we have memory leak
+        delete current_speed;
     }
 
 };
