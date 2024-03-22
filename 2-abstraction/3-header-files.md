@@ -119,5 +119,3 @@ void Car::setColor(string new_color)
 }
 
 ```
-
-
