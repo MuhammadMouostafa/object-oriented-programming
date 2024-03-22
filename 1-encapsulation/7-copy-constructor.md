@@ -2,7 +2,7 @@
 A Copy Constructor creates a new object, which is an exact copy of the existing object. The compiler provides a default Copy Constructor to all the classes.
 
 
-# When is the copy constructor called?
+# When the copy Constructor will be called?
 - When an object is constructed based on another object of the same class. 
     > Car car1;
     >
