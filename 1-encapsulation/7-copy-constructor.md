@@ -20,8 +20,8 @@ A Copy Constructor creates a new object, which is an exact copy of the existing 
     > Car creatCar()
     >
     > {
-    >
-    > return Car("Nissan",280);   // Copy constructor called here
+    > Car car("Nissan",280);
+    > return car1;   // Copy constructor called here
     >
     > }
 - When the compiler generates a temporary object.
