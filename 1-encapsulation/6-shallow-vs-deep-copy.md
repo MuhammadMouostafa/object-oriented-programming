@@ -14,22 +14,22 @@ In Deep copy, an object is created by copying data of all variables, and it also
 
 # Shallow Copy Happen when
 - ### Default Copy Constructor
+    > Car car1;
+    >
+    > Car car2 = car1;
 - ### Default assignment operator
+    > Car car1;
+    >
+    > Car car3;
+    >
+    > car3 = car1;
 
-```
-Car car1;
-
-// Copy Constructor
-Car car2 = car1;
-
-// Assignment operator
-Car car3;
-car3 = car1;
-```
 
 > Note: C++ compiler implicitly creates the default copy constructor and default assignment operator in order to perform shallow copy at compile time.
 
-> To make the class do deep copy not shaalow copy you need to override copy constructor and assigment operator
+# To make the class do deep copy not shallow Copy
+Copy you need to override copy constructor and assigment operator.
+
 # Difference between Shallow and Deep copy
 
 | Shallow Copy | Deep Copy |
