@@ -27,11 +27,3 @@ A Copy Constructor creates a new object, which is an exact copy of the existing 
 
 
 # Default Copy Constructor
-
-### Syntax:
-```
-class-name (class-name &){}
-```
-
-# Copy Constructor 
-# Temporary Object

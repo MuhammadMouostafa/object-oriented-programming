@@ -16,7 +16,7 @@ In Deep copy, an object is created by copying data of all variables, and it also
 - ### Default Copy Constructor
 - ### Default assignment operator
 
-'''
+```
 Car car1;
 
 // Copy Constructor
@@ -25,7 +25,7 @@ Car car2 = car1;
 // Default assignment operator
 Car car3;
 car3 = car1;
-'''
+```
 
 > Note: C++ compiler implicitly creates a copy constructor and overloads assignment operator in order to perform shallow copy at compile time.
 
