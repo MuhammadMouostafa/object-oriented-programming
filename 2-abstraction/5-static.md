@@ -1,4 +1,4 @@
-# Static Data Member
+# Static Member Variable
 Static data members are class members that are declared using static keywords. A static member has certain special characteristics which are as follows:
 
 - Only one copy of that member is created for the entire class and is shared by all the objects of that class, no matter how many objects are created.
@@ -37,7 +37,7 @@ int main()
 }
 ```
 
-# Static member Function
+# Static Member Function
 Static Member Function in a class is the function that is declared as static because of which function attains certain properties as defined below:
 
 - A static member function is independent of any object of the class. 
