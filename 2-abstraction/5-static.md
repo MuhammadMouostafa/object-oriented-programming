@@ -7,7 +7,10 @@ Static data members are class members that are declared using static keywords. A
 
 ### Syntax:
 ```
+// declaration inside the class
 static data_type data_member_name;
+// definitoin outside the class
+data_type class_name::data_member_name = initial_value;
 ```
 
 ### See the following example:
@@ -27,7 +30,7 @@ public:
         cout << number_of_cars << endl;
     }
 };
- int Car::number_of_cars = 0;
+int Car::number_of_cars = 0;
 
 int main()
 {
