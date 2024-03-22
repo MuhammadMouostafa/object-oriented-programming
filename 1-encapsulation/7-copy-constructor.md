@@ -32,6 +32,7 @@ A Copy Constructor creates a new object, which is an exact copy of the existing 
 
 > Note: In all the previous examples the compiler will creates the default copy constructor to perform shallow copy at compile time and to make deep copy we need to override the copy constructor.
 
+> Avoid the last two cases because of Return Value Optimization (RVO), which is a part of the C++ standard. The compiler is allowed to avoid the copy (or move) operation in certain scenarios for performance reasons, even if this would mean that the copy (or move) constructor and the destructor won’t get called.
 
 # Default Copy Contructor
 The default copy constructor created by the compiler to make shallow copy.
