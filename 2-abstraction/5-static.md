@@ -4,12 +4,13 @@ Static data members are class members that are declared using static keywords. A
 - Only one copy of that member is created for the entire class and is shared by all the objects of that class, no matter how many objects are created.
 - It is initialized before any object of this class is created, even before the main starts.
 - It is visible only within the class, but its lifetime is the entire program.
+- A static member variable can be accessed using member functions or the class name through the scope resolution operator.
 
 ### Syntax:
 ```
-// declaration inside the class
+// Declaration inside the class
 static data_type data_member_name;
-// definitoin outside the class
+// Definitoin outside the class
 data_type class_name::data_member_name = initial_value;
 ```
 
@@ -45,7 +46,7 @@ Static Member Function in a class is the function that is declared as static bec
 
 - A static member function is independent of any object of the class. 
 - A static member function can be called even if no objects of the class exist.
-- A static member function can also be accessed using the class name through the scope resolution operator.
+- A static member function can be accessed using any other member function or the class name through the scope resolution operator.
 - A static member function can access static data members and static member functions inside or outside of the class.
 - Static member functions have a scope inside the class and cannot access the current object pointer.
 - You can also use a static member function to determine how many objects of the class have been created.
