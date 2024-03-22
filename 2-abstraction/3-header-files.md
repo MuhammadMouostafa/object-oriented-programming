@@ -1,4 +1,5 @@
 # Scope resolution operator ::
+one of it usages it writing the member function definition outside the class
 ```
 class Car {
 private:
