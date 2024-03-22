@@ -52,7 +52,6 @@ Static Member Function in a class is the function that is declared as static bec
 - A static member function can be accessed using any other member function or the class name through the scope resolution operator.
 - A static member function can access static data members and static member functions inside or outside of the class.
 - Static member functions have a scope inside the class and cannot access the current object pointer.
-- You can also use a static member function to determine how many objects of the class have been created.
 
 ### The reason we need Static member function:
 - Static members are frequently used to store information that is shared by all objects in a class. 
