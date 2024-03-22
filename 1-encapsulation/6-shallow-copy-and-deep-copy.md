@@ -15,6 +15,86 @@ In Deep copy, an object is created by copying data of all variables, and it also
 > Note: C++ compiler implicitly creates a copy constructor and overloads assignment operator in order to perform shallow copy at compile time.
 
 
+
+# Shallow Copy Example: Assigning Objects
+
+```
+#include <iostream>
+using namespace std;
+
+
+class Car {
+private:
+
+    std::string type, color;
+    int *current_speed;
+    int max_speed;
+
+public:
+
+    Car(string type, string color, int max_speed):
+    type(type),
+    color(color),
+    max_speed(max_speed),
+    current_speed(new int(0))
+    {}
+
+    void accelerate()
+    {                 
+        if(*current_speed < max_speed)
+        {
+            (*current_speed) ++;
+        }
+    }
+
+    void changeColor(string new_color)
+    {
+        color = new_color;
+    }
+    void print()
+    {
+        cout<< type << ", " << color << ", " << max_speed << ", " << *current_speed << ", " << current_speed << endl;
+    }
+
+    ~Car()
+    {
+        // If you try to delete the pointer an exception will hapen
+        // delete current_speed;
+        
+        // now we have memory leak
+    }
+
+};
+
+int main()
+{
+    Car car1("Nissan", "white", 280);
+    Car car2("Nissan", "Green", 270);
+
+    car1.print();
+    car2.print();
+    cout<<endl;
+
+    car2 = car1;
+
+    car1.print();
+    car2.print();
+    cout<<endl;
+
+    car1.accelerate();
+    // this will change current_speed in both cars because it wil change the same varible
+    car1.changeColor("Black");
+
+
+    car1.print();
+    car2.print();
+    cout<<endl;
+
+    return 0;
+}
+```
+
+
 # Difference between Shallow and Deep copy
 
 | Shallow Copy | Deep Copy |
