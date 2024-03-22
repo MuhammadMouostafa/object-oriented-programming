@@ -85,8 +85,20 @@ int main()
     // car2 = &car1;      // we can't change the value of const pointer
 }
 ```
+# Const Pointer and Object
+```
+int main()
+{
+    Car car1("Nissan", "Black"); 
+    
 
-
+    const Car* const car2 = new Car("Audi", "Black");
+    car2->print();
+    // car2->changeColor("Red");   // we can't call any non const member function
+    // car2->current_speed++;      // we can't change any member vairable
+    // car2 = &car1;      // we can't change the value of const pointer
+}
+```
 
 
 
