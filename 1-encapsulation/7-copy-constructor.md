@@ -94,7 +94,7 @@ int main()
     cout<<endl;
 
     car1.changeColor("Black");
-    // this will change current_speed in both cars because it wil change the same varible
+    // this will change current_speed in both cars
     car1.accelerate();
 
 
@@ -176,7 +176,7 @@ int main()
     cout<<endl;
 
     car1.changeColor("Black");
-    // this will change current_speed in both cars because it wil change the same varible
+    // this will change current_speed in car1 only
     car1.accelerate();
 
 
