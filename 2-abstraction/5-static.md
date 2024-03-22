@@ -1,35 +1,3 @@
-# Static Variable
-Static variables have the property of preserving their value even after they are out of their scope! Hence, a static variable preserves its previous value in its previous scope and is not initialized again in the new scope. 
-
-### Syntax:
-```
-static data_type var_name = var_value;
-```
-
-### See the following example:
-
-```
-#include <iostream>
-
-using namespace std;
-
-void fun1()
-{
-    static int x=0;
-    x++;
-    cout<<x<<endl;
-}
-
-
-int main()
-{
-    fun1();
-    fun1();
-    fun1();
-}
-```
-
-
 # Static Data Member
 Static data members are class members that are declared using static keywords. A static member has certain special characteristics which are as follows:
 
@@ -82,6 +50,8 @@ Static Member Function in a class is the function that is declared as static bec
 ### The reason we need Static member function:
 - Static members are frequently used to store information that is shared by all objects in a class. 
 - For instance, you may keep track of the quantity of newly generated objects of a specific class type using a static data member as a counter. This static data member can be increased each time an object is generated to keep track of the overall number of objects.
+
+### See the following example:
 
 ```
 #include <iostream>
