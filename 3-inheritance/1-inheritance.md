@@ -159,3 +159,11 @@ class Motorcycle: private Vehicle // 'private' is default for classes
     // z is not accessible
 };
 ```
+
+
+# Types Of Inheritance:-
+- ### Single inheritance
+- ### Multilevel inheritance
+- ### Multiple inheritance
+- ### Hierarchical inheritance
+- ### Hybrid inheritance
