@@ -3,3 +3,12 @@ The word polymorphism means having many forms. In simple words, we can define po
 
 
 ![](/assets/images/polymorphism.png)
+
+
+# Compile-Time Polymorphism
+This type of polymorphism is achieved by function overloading or operator overloading.
+> Note: we explaind function overloading previusly
+
+
+# Runtime Polymorphism
+This type of polymorphism is achieved by Function Overriding. Late binding and dynamic polymorphism are other names for runtime polymorphism. The function call is resolved at runtime in runtime polymorphism. In contrast, with compile time polymorphism, the compiler determines which function call to bind to the object after deducing it at runtime.
