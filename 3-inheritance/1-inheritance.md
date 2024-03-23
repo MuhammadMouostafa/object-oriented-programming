@@ -165,8 +165,8 @@ class Motorcycle: private Vehicle // 'private' is default for classes
 
 - Single inheritance
 - Multilevel inheritance
-- Multiple inheritance
 - Hierarchical inheritance
+- Multiple inheritance
 - Hybrid inheritance
 
 
