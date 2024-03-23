@@ -116,3 +116,12 @@ int main()
 }
 ```
 
+# Modes of Inheritance
+
+- ### Public Mode:
+If we derive a subclass from a public base class. Then the public member of the base class will become public in the derived class and protected members of the base class will become protected in the derived class.
+- ### Protected Mode:
+If we derive a subclass from a Protected base class. Then both public members and protected members of the base class will become protected in the derived class.
+- ### Private Mode:
+If we derive a subclass from a Private base class. Then both public members and protected members of the base class will become Private in the derived class.
+
