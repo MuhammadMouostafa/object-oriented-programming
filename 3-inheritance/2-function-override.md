@@ -1,4 +1,6 @@
-# function Overriding
+# Function Overriding (achieved at run time)
+It is the redefinition of base class function in its derived class with same signature i.e. return type and parameters. 
+
 ```
 #include <iostream>
 
