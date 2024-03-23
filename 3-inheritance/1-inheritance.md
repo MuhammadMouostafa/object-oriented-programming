@@ -119,9 +119,43 @@ int main()
 # Modes of Inheritance
 
 - ### Public Mode:
-If we derive a subclass from a public base class. Then the public member of the base class will become public in the derived class and protected members of the base class will become protected in the derived class.
+    If we derive a subclass from a public base class. Then the public member of the base class will become public in the derived class and protected members of the base class will become protected in the derived class.
 - ### Protected Mode:
-If we derive a subclass from a Protected base class. Then both public members and protected members of the base class will become protected in the derived class.
+    If we derive a subclass from a Protected base class. Then both public members and protected members of the base class will become protected in the derived class.
 - ### Private Mode:
-If we derive a subclass from a Private base class. Then both public members and protected members of the base class will become Private in the derived class.
+    If we derive a subclass from a Private base class. Then both public members and protected members of the base class will become Private in the derived class.
 
+### Example
+
+```
+class Vehicle
+{
+public:
+    int x;
+protected:
+    int y;
+private:
+    int z;
+};
+
+class Car : public Vehicle
+{
+    // x is public
+    // y is protected
+    // z is not visable
+};
+
+class Bus: protected Vehicle
+{
+    // x is protected
+    // y is protected
+    // z is not accessible
+};
+
+class Motorcycle: private Vehicle // 'private' is default for classes
+{
+    // x is private
+    // y is private
+    // z is not accessible
+};
+```
