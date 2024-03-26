@@ -1,8 +1,4 @@
-# Overloading Binary Operator
-
-
-
-### Using member function
+# Binary Operator Overloading using member function
 
 ```
 #include <iostream>
@@ -30,7 +26,7 @@ int main() {
 ```
 
 
-### Using global function
+# Binary Operator Overloading using global function
 
 ```
 #include <iostream>
