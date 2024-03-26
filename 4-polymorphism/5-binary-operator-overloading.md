@@ -59,7 +59,7 @@ int main() {
 ```
 
 # Unary Operator Overloading using friend function
-Friend frun used to access private members.
+Friend function used to access private members.
 
 ```
 #include <iostream>
