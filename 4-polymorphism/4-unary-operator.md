@@ -1,6 +1,6 @@
 # Overloading Unary Operator
 
-### using member function
+### Using member function
 
 ```
 #include <iostream>
@@ -25,5 +25,8 @@ int main() {
 ```
 
 
-### usinf global function
+### Using global function
 
+```
+
+```
