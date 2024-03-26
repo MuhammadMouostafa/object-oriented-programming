@@ -2,7 +2,7 @@
 
 
 
-### using member function
+### Using member function
 
 ```
 #include <iostream>
@@ -13,6 +13,9 @@ class Point
 public:
     double x, y;
     Point(double x, double y): x(x), y(y) {}
+    void print(){
+        cout<<"("<<x<<" , "<<y<<")"<<endl;
+    }
     Point operator +(const Point & other){
         return Point(x + other.x, y + other.y);
     }  
@@ -22,10 +25,71 @@ int main() {
     Point p1(1,2);
     Point p2(3,4);
     Point p3= p1 + p2;
-    cout<<p3.x<<" "<<p3.y<<endl;
+    p3.print();
 }
-
 ```
 
 
-### usinf global function
+### Using global function
+
+```
+#include <iostream>
+using namespace std;
+
+class Point
+{
+public:
+    double x, y;
+    Point(double x, double y): x(x), y(y) {}
+    void print(){
+        cout<<"("<<x<<" , "<<y<<")"<<endl;
+    }
+    Point operator +(const Point & other){
+        return Point(x + other.x, y + other.y);
+    }  
+};
+
+Point operator +(const Point &p1, const Point &p2){
+    return Point(p1.x + p2.x, p1.y + p2.y);
+}
+
+int main() {
+    Point p1(1,2);
+    Point p2(3,4);
+    Point p3= p1 + p2;
+    p3.print();
+}
+```
+
+# Unary Operator Overloading using friend function
+Friend frun used to access private members.
+
+```
+#include <iostream>
+using namespace std;
+
+class Point
+{
+double x, y;
+public:
+    Point(double x, double y): x(x), y(y) {}
+    void print(){
+        cout<<"("<<x<<" , "<<y<<")"<<endl;
+    }
+    Point operator +(const Point & other){
+        return Point(x + other.x, y + other.y);
+    }
+    friend Point operator +(const Point &p1, const Point &p2);
+};
+
+Point operator +(const Point &p1, const Point &p2){
+    return Point(p1.x + p2.x, p1.y + p2.y);
+}
+
+int main() {
+    Point p1(1,2);
+    Point p2(3,4);
+    Point p3= p1 + p2;
+    p3.print();
+}
+```
