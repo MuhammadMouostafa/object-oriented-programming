@@ -1,14 +1,14 @@
 # Inheritance
-The capability of a class to derive properties and characteristics from another class is called Inheritance. Inheritance is one of the most important features of Object-Oriented Programming. 
+Inheritance is the capability of a class to derive properties and characteristics from another class. Inheritance is one of the most important features of Object-Oriented Programming. 
 
 Inheritance is a feature or a process in which, new classes are created from the existing classes. The new class created is called “derived class” or “child class” and the existing class is known as the “base class” or “parent class”. The derived class now is said to be inherited from the base class.
 
 When we say derived class inherits the base class, it means, the derived class inherits all the properties of the base class, without changing the properties of base class and may add new features to its own. These new features in the derived class will not affect the base class. The derived class is the specialized class for the base class.
 
 ### Sub Class
-The class that inherits properties from another class is called Subclass or Derived Class. 
+The class that inherits properties from another class also called Derived Class. 
 ### Super Class
-The class whose properties are inherited by a subclass is called Base Class or Superclass. 
+The class whose properties are inherited by a subclass also called Base Class. 
 
 
 
@@ -48,15 +48,13 @@ public:
 
 
 You can clearly see that the above process results in duplication of the same code 3 times. This increases the chances of error and data redundancy.
-To avoid this type of situation, inheritance is used. If we create a class Vehicle and write these three functions in it and inherit the rest of the classes from the vehicle class, then we can simply avoid the duplication of data and increase re-usability. Look at the below diagram in which the three classes are inherited from vehicle class:
+To avoid this type of situation, inheritance is used. If we create a class Vehicle and write these three functions in it and inherit the rest of the classes from the vehicle class, then we can simply avoid the duplication of data and increase re-usability.
 
 ![](/assets/images/inheritance.png)
 
 Using inheritance, we have to write the functions only one time instead of three times as we have inherited the rest of the three classes from the base class (Vehicle).
 Implementing inheritance in C++: For creating a sub-class that is inherited from the base class we have to follow the below syntax. 
 
-### Derived Classes:
-A Derived class is defined as the class derived from the base class.
 ### Syntax: 
 ```
 class  <derived_class_name> : <access-specifier> <base_class_name>
@@ -142,7 +140,7 @@ class Car : public Vehicle
 {
     // x is public
     // y is protected
-    // z is not visable
+    // z is not accessible
 };
 
 class Bus: protected Vehicle

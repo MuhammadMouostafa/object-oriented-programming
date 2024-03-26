@@ -82,3 +82,7 @@ int main()
 
 }
 ```
+
+
+
+# pure vertiual function
