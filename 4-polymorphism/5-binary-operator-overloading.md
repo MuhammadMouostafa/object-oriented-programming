@@ -27,6 +27,7 @@ int main() {
 
 
 # Binary Operator Overloading using global function
+The left operand of the operation must be the class that has the function
 
 ```
 #include <iostream>
