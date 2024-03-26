@@ -7,7 +7,7 @@ The word polymorphism means having many forms. In simple words, we can define po
 
 # Compile-Time Polymorphism
 This type of polymorphism is achieved by function overloading or operator overloading.
-> Note: we explaind function overloading previusly
+> Note: we explained function overloading previusly
 
 
 # Runtime Polymorphism
