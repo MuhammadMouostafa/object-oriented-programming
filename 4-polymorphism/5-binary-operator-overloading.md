@@ -106,16 +106,20 @@ public:
 };
 
 void operator << (ostream &out, const Point &p){
-    out << "(" << p.x << " , " << p.y << ")" << endl;
+    out << "(" << p.x << " , " << p.y << ")";
 } 
 
 int main() {
     Point p1(1,2);
+    Point p2(3,4);
     cout<<p1;
+    cout<<endl;
+    cout<<p2;
 }
 ```
 
-### To print many variables you need to return the stream
+### To print any thing after print the Point object
+This achived by returning the ostream& to use it aging in the same operation
 
 ```
 #include <iostream>
@@ -133,12 +137,13 @@ public:
 };
 
 ostream& operator << (ostream &out, const Point &p){
-    out << "(" << p.x << " , " << p.y << ")" << endl;
+    out << "(" << p.x << " , " << p.y << ")";
     return out;
 } 
 
 int main() {
     Point p1(1,2);
-    cout<< p1 << endl;
+    Point p2(3,4);
+    cout<< p1 <<" "<< p2 << endl;
 }
 ```
