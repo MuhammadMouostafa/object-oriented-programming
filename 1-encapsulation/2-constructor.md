@@ -135,6 +135,8 @@ int main() {
 
 ## 🔍 Shallow vs Deep Copy
 
+![](/assets/images/shallow-vs-deep-copy.png)
+
 | Shallow Copy                          | Deep Copy                               |
 |--------------------------------------|------------------------------------------|
 | Copies only pointers                 | Allocates new memory and copies values   |
