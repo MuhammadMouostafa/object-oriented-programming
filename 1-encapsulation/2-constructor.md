@@ -11,11 +11,13 @@ Constructors can be classified based on in which situations they are being used.
 - Parameterized Constructor
 - Copy Constructor
 - Move Constructor
+- Delegating Constructor
+- Explicit Constructor
 
 
 
-# Default Constructor
-A default constructor is a constructor that doesn’t take any argument. It has no parameters. It is also called a zero-argument constructor.
+# 1. Default Constructor
+A constructor that takes no parameters (or all parameters have default values). It is automatically called when you create an object without arguments
 
 ```
 #include <iostream>
@@ -25,25 +27,23 @@ using namespace std;
 class Car
 {
 public:
-    Car()   // Constructor
+    Car()   // Default Constructor
     {
-      cout << "New Object of Car class created" << endl;
+      cout << "Default constructor called!" << endl;
     }
 };
 
-
 int main()
 {
-    Car car1;// Declare Object car1 from class Car (this will call the constructor)
-    return 0;
+    Car car1;  // Calls default constructor
 }
 
 
 ```
  > NOTE: If no constructor created, the compiler create default constructor that do nothing class_name(){}.
 
-# Parameterized Constructors
-Constructors can also take parameters (just like regular functions), which can be useful for setting initial values for attributes.
+# 2. Parameterized Constructors
+A constructor that takes one or more parameters to initialize the object with specific values.
 
 > All the rules of the global functions default arguments will be applied to these parameters.
 
@@ -55,29 +55,21 @@ using namespace std;
 class Car
 {
 public:
-    std::string type;
-    int current_speed, max_speed;
-    Car(string in_type, int in_max_speed)   // Constructor take two parameters
+    string type;
+    Car(string in_type)   // Parameterized constructor
     {
       type = in_type;
-      max_speed = in_max_speed;
-      current_speed = 0;
-    }
-    void print()
-    {
-        cout<< type << ", " << max_speed << ", " << current_speed << endl;
+      cout<< "Parameterized constructor called with car type " << type << endl;
     }
 };
 
 int main()
 {
-    Car car1("Nissan", 280);//Declare Object car1 from class Car(this will call the constructor)
-    car1.print();
-    return 0;
+    Car car1("Nissan"); // Calls parameterized constructor
 }
 ```
 
-# Many constructors in one class
+### Many constructors in one class
 ```
 #include <iostream>
 
@@ -87,42 +79,98 @@ class Car
 {
 public:
     std::string type;
-    int current_speed, max_speed;
-    Car(string in_type, int in_max_speed)   // Constructor take two parameters
+    Car()   // Default Constructor
+    {
+      cout << "Default constructor called!" << endl;
+    }
+    Car(string in_type)   // Parameterized constructor
     {
       type = in_type;
-      max_speed = in_max_speed;
-      current_speed = 0;
-    }
-    Car(string in_type)                    // Constructor take one parameter
-    {
-      type = in_type;
-      max_speed = 280;
-      current_speed = 0;
-    }
-    void print()
-    {
-        cout<< type << ", " << max_speed << ", " << current_speed << endl;
+      cout<< "Parameterized constructor called with car type " << type << endl;
     }
 };
 
 int main()
 {
-    Car car1("Nissan", 250);  // Will call constructor Car(string in_type, int in_max_speed)
-    Car car2("Audi");         // Will call constructor Car(string in_type)
-    
-    car1.print();
-    car2.print();
-    
-    return 0;
+  Car car1;  // Calls default constructor
+  Car car2("Nissan"); // Calls parameterized constructor
 }
 
 ```
 
-# Default Arguments with Parameterized Constructor
-Just like normal functions, we can also define default values for the arguments of parameterized constructors.'
-> All the rules of the default arguments will be applied to these parameters.
+# 3. Copy Constructors
+Creates a new object by copying an existing object. Used when passing objects by value or explicitly copying.
 
+```
+#include <iostream>
+using namespace std;
+
+class Car {
+public:
+    string type;
+    
+    Car(string in_type)   // Parameterized constructor
+    {
+      type = in_type;
+      cout<< "Parameterized constructor called with car type " << type << endl;
+    }
+
+    Car(const Car& other)
+    {
+      type = other.type;
+      cout<< "Copy constructor called" << endl;
+    }
+};
+```
+
+### When the copy Constructor will be called?
+- When an object is constructed based on another object of the same class. 
+    > Car car1("Nissan");
+    >
+    > Car car2 = car1;  // Copy constructor called here
+    >
+    > Car car3(car1);   // Copy constructor called here
+
+- When an object of the class is passed (to a function) by value as an argument. 
+    > fun(Car car1)   // Copy constructor called when this function called
+    >
+    > {
+    > 
+    > }
+- When an object of the class is returned by value. 
+    > Car creatCar()
+    >
+    > {
+    >
+    > Car car1("Nissan");
+    >
+    > return car1;   // Copy constructor called here
+    >
+    > }
+- When the compiler generates a temporary object.
+    > Car car1 = car1("Nissan");   // Copy constructor called here
+
+
+> The compiler provides a default Copy Constructor to all the classes if not created.
+
+
+> Note: In all the previous examples the compiler will creates the default copy constructor to perform shallow copy at compile time and to make deep copy we need to override the copy constructor.
+
+> Avoid the last two cases because of Return Value Optimization (RVO), which is a part of the C++ standard. The compiler is allowed to avoid the copy (or move) operation in certain scenarios for performance reasons, even if this would mean that the copy (or move) constructor and the destructor won’t get called and in our case shllow copy will happen even if we create copy constructor, so its based on the compiler.
+
+## Shallow copy vs Deep copy
+The default copy constructor created by the compiler to make shallow copy.
+
+todoooooo
+
+
+# 4. Move Constructor (C++11+)
+Transfers ownership of resources from a temporary (rvalue) object, improving performance.
+
+todooo
+
+# 5. Delegating Constructor (C++11+)
+A constructor that calls another constructor in the same class to avoid repeating code.
 ```
 #include <iostream>
 
@@ -132,40 +180,30 @@ class Car
 {
 public:
     std::string type;
-    int current_speed, max_speed;
-    Car(string in_type, int in_max_speed = 280)   // Constructor take one/two parameters
+    Car()   // Delegating Constructor
+    {
+      cout << "Default constructor called!" << endl;
+      Car("Toyota");
+    }
+    Car(string in_type)   // Parameterized constructor
     {
       type = in_type;
-      max_speed = in_max_speed;
-      current_speed = 0;
-    }
-    
-    // Avoid to create another constructor take one paramiter, it will get compilation error
-    /*
-    Car(string in_type)                    
-    {
-      type = in_type;
-      max_speed = 280;
-      current_speed = 0;
-    }
-    */
-    void print()
-    {
-        cout<< type << ", " << max_speed << ", " << current_speed << endl;
+      cout<< "Parameterized constructor called with car type " << type << endl;
     }
 };
 
 int main()
 {
-    Car car1("Nissan", 250);  // Will call constructor Car(string in_type, int in_max_speed)
-    Car car2("Audi");         // Will call constructor Car(string in_type)
-    
-    car1.print();
-    car2.print();
-    
-    return 0;
+  Car car1;  // Calls default constructor
+  Car car2("Nissan"); // Calls parameterized constructor
 }
 ```
+
+# 6. Explicit Constructor
+
+todooo
+expalin emplicit and explicit
+
 
 # Characteristics of Constructors
 
