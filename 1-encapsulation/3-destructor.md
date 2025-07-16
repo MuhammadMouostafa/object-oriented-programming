@@ -1,110 +1,166 @@
-# Destructor
-An Destructor in C++ is a special method (has no return type) that is automatically called by the compiler when the scope of an object of the class ends. 
+# 💣 Destructor in C++
 
-> To create a destructor, use ~ followed by the same name as the class, followed by parentheses ():
+A **destructor** is a special member function in C++ that is **automatically called** when an object:
 
+- Goes **out of scope**
+- Is **explicitly deleted**
+- Or is a **global/static object** and the program ends
+
+It is used to **release resources** such as dynamically allocated memory, file handles, or network connections.
+
+---
+
+## 🔧 Syntax
+
+```cpp
+class MyClass {
+public:
+    ~MyClass();  // Destructor declaration
+};
 ```
-#include <iostream>
 
+- Begins with a **tilde (~)** followed by the class name
+- Has **no return type**
+- Takes **no parameters**
+- Cannot be overloaded
+
+---
+
+## 🧠 Why Use a Destructor?
+
+To **clean up resources** that your object acquired during its lifetime.
+
+### Example:
+
+```cpp
+class Car {
+public:
+    string* type;
+
+    Car(const string& in_type) {
+        type = new string(in_type);
+    }
+
+    ~Car() {
+        delete type;
+        cout << "Destructor called\n";
+    }
+};
+```
+
+If you don’t release memory manually (`delete`), your program will **leak memory**.
+
+---
+
+## ⏱ When Is the Destructor Called?
+
+| Situation                        | Destructor Called |
+|----------------------------------|-------------------|
+| Object goes out of scope         | ✅ Yes            |
+| Object is deleted via `delete`   | ✅ Yes            |
+| Program exits (global/static)    | ✅ Yes            |
+| Object is moved                  | ✅ If not null    |
+
+---
+
+## 🔄 Destruction Order
+
+Destructors are called in **reverse order of construction** when leaving scope.
+
+### ✅ Example: Scope and Order
+
+```cpp
+#include <iostream>
 using namespace std;
 
-class Car
-{
+class Car {
 public:
-    Car()   // Constructor
-    {
-      cout << "New Object of Car class created" << endl;
+    string name;
+
+    Car(string name) : name(name) {
+        cout << "Constructed: " << name << endl;
     }
-    ~Car()   // Destructor
-    {
-      cout << "The scope of Object of Car class ended" << endl;
+
+    ~Car() {
+        cout << "Destroyed: " << name << endl;
     }
 };
 
 int main() {
-    Car car1; // Declare Object car1 from class Car (this will call the constructor)
-    return 0;
-} // The scode of Object car1 of class Car ended(this will call the destructor)
+    cout << "Entering scope\n";
 
-```
-
-# Destructor calling ordere
-Destructor is called in the reverse order of its constructor invocation.
-```
-#include <iostream>
-
-using namespace std;
-
-class Car
-{
-    string type;
-public:
-    Car(string in_type)
+    Car car1("BMW");
     {
-        type = in_type;
-        cout << "Car created of type "<< type << endl;
-    }
-    ~Car()
-    {
-        cout << "Car destroyed of type " << type << endl;
-    }
-};
+        Car car2("Audi");
+        Car car3("Tesla");
+    } // car3 and car2 go out of scope here
 
-int main() {
-    Car car1("Nissan"); 
-    Car car2("Audi"); 
-    Car car3("Volvo"); 
-    
-    return 0;
+    cout << "Leaving scope\n";
 }
 ```
 
-# Dealocate the memory
-T avoid memory leak, delete all pointers in the class.
-
+### 🧾 Output:
 ```
-#include <iostream>
+Entering scope
+Constructed: BMW
+Constructed: Audi
+Constructed: Tesla
+Destroyed: Tesla
+Destroyed: Audi
+Leaving scope
+Destroyed: BMW
+```
 
-using namespace std;
+---
 
-class Car
-{
-public:
-    Car()   // Constructor
-    {
-      cout << "New Object of Car class created" << endl;
-    }
-    ~Car()   // Destructor
-    {
-      cout << "The scope of Object of Car class ended" << endl;
-    }
-};
+## 🚧 Destructor in Pointer-Holding Classes
 
-class Game
-{
-public:
-  Car *arr;
-  public:
-    Game()   // Constructor
-    {
-      arr = new Car[4];
-    }
-    ~Game()   // Destructor
-    {
-      delete[] arr;
-      arr = nullptr;
-    }
-};
+### ❌ Unsafe (shallow copy):
 
-int main() {
-    Game game;
+```cpp
+~Car() {
+    delete type; // May cause double delete
 }
 ```
 
-# Characteristics of Destructors in C++
+### ✅ Safe:
 
-- Destructor is invoked automatically by the compiler when its corresponding constructor goes out of scope and releases the memory space that is no longer required by the program.
-- Destructor neither requires any argument nor returns any value therefore it cannot be overloaded.
-- Destructor  cannot be declared as static and const;
-- Destructor should be declared in the public section of the program.
-- Destructor is called in the reverse order of its constructor invocation.
+```cpp
+~Car() {
+    if (type) {
+        delete type;
+    }
+}
+```
+
+---
+
+## 📏 Rule of Three / Five
+
+If your class defines a **destructor**, you should also define:
+
+- Copy constructor
+- Copy assignment operator
+
+And in C++11+:
+
+- Move constructor
+- Move assignment operator
+
+This is the **Rule of Five**.
+
+---
+
+## ✅ Summary
+
+| Feature               | Destructor                 |
+|-----------------------|----------------------------|
+| Syntax                | `~ClassName()`             |
+| Parameters            | None                       |
+| Return type           | None                       |
+| Overload allowed?     | ❌ No                      |
+| Automatic call?       | ✅ Yes                     |
+| Purpose               | Cleanup resources          |
+| Called when           | Object leaves scope or is deleted |
+
+---
