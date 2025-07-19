@@ -1,204 +1,168 @@
-# Encapsulation
+# 📦 Encapsulation in C++
 
-Encapsulation is a fundamental concept in object-oriented programming (OOP) that refers to the bundling of data and methods that operate on that data within a single unit, which is achieved by class or struct..
-> NOTE: I will use class only in this tutorial
+Encapsulation is a fundamental principle in object-oriented programming (OOP). It means bundling data (attributes) and the functions (methods) that operate on that data into a single unit — the class.
+
+🔒 It helps protect the internal state of an object and exposes only what’s necessary to the outside world.
 
 ![](/assets/images/encapsulation.png)
 
-# Class
-A Class is a user-defined data type, which holds its own data members and member functions, which can be accessed and used by creating an instance of that class.
+---
 
-- ## Attributes (Data members or member variables)
-    Data members are the data variables that define the properties of the objects of a Class.
+🔧 **Class and Object Basics**
 
-- ## Methods (Member functions)
-    Member functions are the functions manipulate these data members and define the properties of the objects of a Class.
+### 🔹 Class
 
+A class is a blueprint for creating objects. It defines attributes (data members) and actions (member functions).
 
-# Object
-An Object is an instance of a class created with specifically defined data.
-> Objects can correspond to real-world objects.
+```cpp
+class Car {
+public:
+    string type;
+    int max_speed;
+    int current_speed;
+
+    void accelerate();  // member function declaration
+};
+```
+
+### 🔹 Object
+
+An object is an instance of a class.
 
 ![](/assets/images/class-vs-object.png)
 
-
-
-# Lets take this example:
-
-If you need to create a program that manage a list of cars,
-
-where each car has three attributes
-- type
-- max_speed 
-- current_speed
-
-And two actions 
-
-- accelerate to increase the current_speed by one 
-- break to decrease the current_speed by one.
-
-You can write this program and it will works fine
-
-
-## Solution 1: without class
-
-```
-#include<iostream>
-using namespace std;
-
-int main() 
-{
-    string car1_type = "Nissan";
-    int car1_max_speed = 280;
-    int car1_current_speed = 0;
-
-    // accelerate car1
-    car1_current_speed++;
-    car1_current_speed++;
-    car1_current_speed++;
-
-    cout << "Current speed of car1: " << car1_current_speed << std::endl;
-
-    // slow down car1
-    car1_current_speed--;
-
-    cout << "Current speed of car1: " << car1_current_speed << std::endl;
-
-    //   The remaining implementation to do for many cars
-
-    return 0;
-}
-
+```cpp
+Car myCar;  // object of class Car
 ```
 
-## Solution 2: with class has data member but hasn't member functions
+---
 
-```
+🧱 **Why Encapsulation?**
+
+Suppose you're writing a program to manage cars. Each car has:
+
+* **Attributes**: `type`, `max_speed`, `current_speed`
+* **Behaviors**: `accelerate`, `brake`
+
+You could do this without classes, but as your program grows, managing many cars becomes messy.
+
+### ✅ Approach 1: Without Class
+
+```cpp
 #include <iostream>
-#include <string>
-
 using namespace std;
 
-class Car                               // Class name
-{                                       // Start of class body 
-public:                                 // Access specifier
-    std::string type;                   // Member variable
-    int current_speed, max_speed;       // Member variables
-};                                      // The end of the class body
+int main() {
+    string type1 = "Nissan";
+    int max_speed1 = 280;
+    int current_speed1 = 0;
 
-int main() 
-{
-    Car car1; // Declare Object car1 from class Car
+    current_speed1++;  // accelerate
+    current_speed1++;
+
+    cout << "Speed: " << current_speed1 << endl;
+
+    current_speed1--;  // brake
+
+    cout << "Speed: " << current_speed1 << endl;
+}
+```
+
+❌ **Drawbacks:**
+
+* Difficult to manage many cars
+* No structure or code reuse
+
+---
+
+### ✅ Approach 2: Class With Data Members Only
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Car {
+public:
+    string type;
+    int max_speed;
+    int current_speed;
+};
+
+int main() {
+    Car car1;
     car1.type = "Nissan";
     car1.max_speed = 280;
     car1.current_speed = 0;
 
-    // Accelerate car1
-    car1.current_speed++;
-    car1.current_speed++;
-    car1.current_speed++;
+    car1.current_speed++;  // accelerate
 
-    cout << "Current speed of car1: " << car1.current_speed << std::endl;
-
-    // Slow down car1
-    car1.current_speed--;
-
-    cout << "Current speed of car1: " << car1.current_speed << std::endl;
-
-    // Remaining implementation for other cars...
-
-    return 0;
+    cout << "Speed: " << car1.current_speed << endl;
 }
-
 ```
 
-### Example explained
+🟡 **Better structure**, but we still manually modify `current_speed`.
 
-- The class keyword is used to create a class called Car.
-- The public keyword is an access specifier, which specifies that members (attributes and methods) of the class are accessible from outside the class. You will learn more about access specifiers later.
-- Inside the class, there are three attributes:
-    - Two integer variables: max_speed and current_speed.
-    - One string variable: type.
-- The class body is enclosed within curly braces {}.
-- The class definition concludes with a semicolon ;.
-- To define object write "class_name.object_name".
-- To access data member write "object_name.data_member_name".
-## Solution 3: with class has member vairables amd member functions
+---
 
-```
+### ✅ Approach 3: Class With Data and Member Functions
+
+```cpp
 #include <iostream>
-#include <string>
-
 using namespace std;
 
-class Car 
-{                                       // Class name
-public:                                 // Access specifier
-    std::string type;                   // Member variable
-    int current_speed, max_speed;       // Member variables
+class Car {
+public:
+    string type;
+    int max_speed;
+    int current_speed;
 
-    void accelerate()                   // Member function
-    {                 
-        if(current_speed < max_speed)
-        {
-            current_speed ++;
+    void accelerate() {
+        if (current_speed < max_speed) {
+            current_speed++;
         }
     }
 
-    void slowDown()                     // Member function
-    {                     
-        if (current_speed > 0)
-        {
-            current_speed --;
+    void brake() {
+        if (current_speed > 0) {
+            current_speed--;
         }
     }
-    void stop()                         // Member function
-    {                     
+
+    void stop() {
         current_speed = 0;
     }
 
-    void print()
-    {
-        cout << "Current speed of car1: " << current_speed << std::endl;
+    void print() {
+        cout << "Speed: " << current_speed << endl;
     }
 };
 
-
-int main()
-{
-    Car car1; // Declare Object car1 from class Car
+int main() {
+    Car car1;
     car1.type = "Nissan";
     car1.max_speed = 280;
     car1.current_speed = 0;
 
-    // accelerate car1
-    car1.accelerate();
-
     car1.accelerate();
     car1.accelerate();
+    car1.print();       // Speed: 2
 
-    car1.print();
+    car1.brake();
+    car1.print();       // Speed: 1
 
-    // slow down car1
-    car1.slowDown();
-    car1.print();
-
-    // stop car1
     car1.stop();
-    car1.print();
-
-    //   The remaining implementation to do for many cars
-
-    return 0;
+    car1.print();       // Speed: 0
 }
-
 ```
 
-### Example explained
+✅ **Clean and reusable**
+✅ **Functions hide how speed is changed**
+✅ **Easy to manage many cars**
 
-- Inside the class, there are three methods:
-    - accelerate() : that increment the current_speed by one but not exeeds the max_speed.
-    - slowDown() : that decrease the current_speed by one but not less than zero.
-    - stop() : that set the current_speed to zero.
-- To access member function write "object_name.member_function_name".
-> Note: When a class is defined, no memory is allocated but when it is instantiated (i.e. an object is created) memory is allocated.
+---
+
+📝 **Key Points**
+
+* Use **classes** to group related data and behaviors.
+* Use **member functions** to manipulate internal state safely.
+* **Encapsulation** keeps your code **modular**, **maintainable**, and **secure**.
