@@ -346,42 +346,95 @@ Base destructor
 * Always use a **virtual destructor** in a base class if you expect **polymorphic deletion**.
 * It protects against bugs that may not crash your program but can silently cause memory/resource leaks.
 
+---
+# `virtual`, `override`, and `final` Keywords in C++
 
-### Pure Virtual Functions and Abstract Classes
+C++ uses the `virtual`, `override`, and `final` keywords to support polymorphism and control function overriding in inheritance hierarchies. Here's a breakdown of what each keyword does, followed by detailed examples.
 
+## `virtual` Keyword
+
+The `virtual` keyword is used in base classes to declare functions that can be overridden in derived classes. It enables **runtime polymorphism** (dynamic dispatch), allowing the correct function to be called based on the actual object type.
+
+## `override` Keyword
+
+The `override` keyword is used in derived classes to indicate that a virtual function from the base class is being overridden. It helps catch mistakes, like mismatched function signatures.
+
+### Example:
 ```cpp
+#include <iostream>
+using namespace std;
+
 class Shape {
 public:
-    virtual void draw() = 0; // Pure virtual
+    virtual void draw() const {
+        cout << "Drawing shape" << endl;
+    }
+
+    void move() const {
+        cout << "Moving shape" << endl;
+    }
 };
 
 class Circle : public Shape {
 public:
-    void draw() override {
-        std::cout << "Drawing Circle" << std::endl;
+    void draw() const override {  // ✅ Correctly overrides
+        cout << "Drawing circle" << endl;
+    }
+
+    // ❌ Invalid override - 'move' is not virtual in base class
+    // void move() override {
+    //     cout << "Invalid override attempt" << endl;
+    // }
+};
+
+int main() {
+    Shape* s = new Circle();
+    s->draw();  // Output: Drawing circle
+    s->move();  // Output: Moving shape
+    delete s;
+    return 0;
+}
+
+```
+
+## `final` Keyword
+
+The `final` keyword in C++ can be used in two ways:
+
+- **With a virtual function**: Prevents the function from being overridden in any derived class.
+- **With a class**: Prevents the class from being inherited at all.
+
+### Function-level `final` Example:
+```cpp
+#include <iostream>
+using namespace std;
+
+class Printer {
+public:
+    virtual void print() final {  // ❌ final here prevents any override
+        cout << "Printing from base" << endl;
     }
 };
+
+class PDFPrinter : public Printer {
+public:
+    // ❌ Error: print is marked as final in base class
+    // void print() override {
+    //     cout << "Trying to override final method" << endl;
+    // }
+};
+
 ```
----
 
-## `override`, `final`, `virtual` Keywords
-
-* `virtual`: Declares a function as virtual.
-* `override`: Ensures you're correctly overriding a virtual function.
-* `final`: Prevents further overriding.
-
+### Class-level `final` Example:
 ```cpp
-class A {
+class NonInheritable final {
 public:
-    virtual void func() {}
+    void display() {}
 };
 
-class B : public A {
-public:
-    void func() override final {}
-};
+// class SubClass : public NonInheritable { };  // ❌ Error: class is final
 ```
-
 ---
 
 ## Dynamic Cast and RTTI
