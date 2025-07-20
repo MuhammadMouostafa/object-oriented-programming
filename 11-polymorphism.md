@@ -437,21 +437,107 @@ public:
 ```
 ---
 
-## Dynamic Cast and RTTI
+## 🧠 Dynamic Cast and RTTI (Run-Time Type Information)
 
-Allows casting base pointers to derived types safely at runtime:
+When using **polymorphism** in C++, we often use **base class pointers** to point to **derived class objects**. But sometimes we need to safely check or access the actual type of the object. That's where `dynamic_cast` and `typeid` are useful.
+> `dynamic_cast` and `typeid` are **Operators**.
+### 🧩 What is RTTI?
+
+RTTI (Run-Time Type Information) allows checking the **actual type** of an object at **runtime**.  
+It only works if the base class has at least one `virtual` function (i.e., it's polymorphic).
+
+---
+
+### 🔄 `dynamic_cast`: Safe Downcasting
+
+`dynamic_cast` tries to convert a pointer/reference of a base class to a derived class **safely**.
+
+### ✅ Example:
 
 ```cpp
-Animal* a = new Dog();
-Dog* d = dynamic_cast<Dog*>(a);
-```
+#include <iostream>
+using namespace std;
 
-Use `typeid` to inspect types at runtime:
+class Animal {
+public:
+    virtual void speak() { cout << "Animal sound\n"; }
+};
 
-```cpp
-if (typeid(*a) == typeid(Dog)) {
-    std::cout << "It is a Dog";
+class Dog : public Animal {
+public:
+    void speak() override { cout << "Woof!\n"; }
+    void fetch() { cout << "Dog fetching ball!\n"; }
+};
+
+int main() {
+    Animal* a = new Dog();  // Base pointer to derived object
+
+    Dog* d = dynamic_cast<Dog*>(a);  // Try to cast to Dog
+
+    if (d) {
+        d->fetch();  // Safe to call Dog-specific method
+    } else {
+        cout << "Not a Dog\n";
+    }
+
+    delete a;
 }
 ```
 
+### ⚠️ If the cast fails
 
+```cpp
+Animal* a = new Animal();
+Dog* d = dynamic_cast<Dog*>(a);  // Returns nullptr
+```
+
+---
+
+### 🕵️ `typeid`: Check the Actual Type
+
+`typeid` gets the **real type** of an object at runtime.
+
+### ✅ Example:
+
+```cpp
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class Animal {
+public:
+    virtual ~Animal() {}
+};
+
+class Dog : public Animal {};
+
+int main() {
+    Animal* a = new Dog();
+
+    if (typeid(*a) == typeid(Dog)) {
+        cout << "It is a Dog\n";
+    } else {
+        cout << "It is NOT a Dog\n";
+    }
+
+    delete a;
+}
+```
+
+---
+
+### 🎯 How They Help With Polymorphism
+
+- In polymorphism, we use base pointers to work with derived objects.
+- But to access derived-specific methods or check the exact type, we use:
+  - `dynamic_cast` to **safely convert** back to derived class.
+  - `typeid` to **check the real type** of the object.
+
+---
+
+### ✅ Summary Table
+
+| Feature        | Purpose                              | Requires Virtual? | Returns         |
+|----------------|---------------------------------------|-------------------|-----------------|
+| `dynamic_cast` | Safely cast base to derived           | ✅ Yes            | Pointer or nullptr |
+| `typeid`       | Get the actual object type at runtime | ✅ Yes            | `type_info` object |
