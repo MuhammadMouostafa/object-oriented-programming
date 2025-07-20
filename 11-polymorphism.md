@@ -235,19 +235,117 @@ Let's visualize `A* obj = new C();`
 
 This mechanism is fundamental to C++'s object-oriented power!
 
+---
+## 🧹 Virtual Destructors in C++
 
-### Virtual Destructors
+### 🔥 The Problem Without Virtual Destructors
 
-Ensures proper cleanup when deleting derived objects via base pointers.
+In C++, when you delete an object through a pointer to its **base class**, the destructor that's actually called depends on whether the base class destructor is marked `virtual` or not.
+
+If it's **not virtual**, **only the base class destructor is executed**, even if the object is actually of a derived class. This causes:
+
+* 🔁 Derived class cleanup is **skipped**
+* 🧠 Resource **leaks** (memory, file handles, etc.)
+* ❌ Violated polymorphic behavior
+
+#### ❌ Example: Memory Leak Without Virtual Destructor
 
 ```cpp
+#include <iostream>
+
+class Base {
+public:
+    ~Base() {
+        std::cout << "Base destructor\n";
+    }
+};
+
+class Derived : public Base {
+private:
+    int* data;
+public:
+    Derived() {
+        data = new int[100];  // allocate memory
+        std::cout << "Derived constructor\n";
+    }
+
+    ~Derived() {
+        delete[] data;  // cleanup memory
+        std::cout << "Derived destructor\n";
+    }
+};
+
+int main() {
+    Base* ptr = new Derived();  // actually a Derived object
+    delete ptr;  // Only Base destructor is called!
+}
+```
+
+**Output:**
+
+```
+Derived constructor
+Base destructor
+```
+
+> ❌ `Derived::~Derived()` was **never called**, so the allocated memory is leaked!
+
+---
+
+### ✅ Fix: Use a Virtual Destructor in the Base
+
+To fix this, we declare the base destructor as `virtual`. This ensures the **correct destructor chain** is called, starting from the derived class down to the base.
+
+#### ✅ Example: Safe Cleanup with Virtual Destructor
+
+```cpp
+#include <iostream>
+
 class Base {
 public:
     virtual ~Base() {
-        std::cout << "Base destructor" << std::endl;
+        std::cout << "Base destructor\n";
     }
 };
+
+class Derived : public Base {
+private:
+    int* data;
+public:
+    Derived() {
+        data = new int[100];
+        std::cout << "Derived constructor\n";
+    }
+
+    ~Derived() {
+        delete[] data;
+        std::cout << "Derived destructor\n";
+    }
+};
+
+int main() {
+    Base* ptr = new Derived();
+    delete ptr;  // Correctly calls both destructors
+}
 ```
+
+**Output:**
+
+```
+Derived constructor
+Derived destructor
+Base destructor
+```
+
+> ✅ Now the memory is safely released. The destruction is correct and complete.
+
+---
+
+### 🧠 When to Use Virtual Destructors?
+
+* Always use a **virtual destructor** in a base class if you expect **polymorphic deletion**.
+* It protects against bugs that may not crash your program but can silently cause memory/resource leaks.
+
 
 ### Pure Virtual Functions and Abstract Classes
 
@@ -264,21 +362,9 @@ public:
     }
 };
 ```
-
 ---
 
-## 3. vtable and vptr
-
-To support dynamic dispatch, C++ compilers use:
-
-* **vtable**: A table of function pointers created per class with virtual functions.
-* **vptr**: A hidden pointer in each object instance pointing to its class's vtable.
-
-When a virtual method is called, the call is resolved through the vptr and vtable at runtime.
-
----
-
-## 4. `override`, `final`, `virtual` Keywords
+## `override`, `final`, `virtual` Keywords
 
 * `virtual`: Declares a function as virtual.
 * `override`: Ensures you're correctly overriding a virtual function.
@@ -298,7 +384,7 @@ public:
 
 ---
 
-## 5. Dynamic Cast and RTTI
+## Dynamic Cast and RTTI
 
 Allows casting base pointers to derived types safely at runtime:
 
@@ -314,21 +400,5 @@ if (typeid(*a) == typeid(Dog)) {
     std::cout << "It is a Dog";
 }
 ```
-
----
-
-## Summary
-
-Polymorphism enables flexible and extensible code. Core components include:
-
-* Overloading (compile-time)
-* Virtual functions and inheritance (runtime)
-* Abstract classes and pure virtual methods
-* vtable and vptr mechanics
-* Proper destructor behavior
-* Runtime type checks (dynamic\_cast, typeid)
-
-Mastering polymorphism allows you to design reusable, maintainable, and scalable software systems.
-
 
 
