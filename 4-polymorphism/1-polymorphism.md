@@ -90,110 +90,150 @@ a->speak(); // Output: Dog barks
 Now, the function call is resolved at runtime using the actual object type.
 
 
-# 🔍 Understanding Virtual Table (vtable) and Virtual Pointer (vptr)
+# 🔍 Virtual Table (vtable) and Virtual Pointer (vptr)
 
-## 🔸 Concept Overview
-When a class contains at least one virtual function, the compiler sets up a mechanism to support runtime polymorphism. This mechanism involves: **vtable** (Virtual Table) and **vptr** (Virtual Pointer)
+## 📚 Overview
+
+In C++, polymorphism allows us to call derived class methods through base class pointers or references. This is made possible by two key mechanisms:
+
+* **Virtual Table (vtable)**: A lookup table for virtual functions.
+* **Virtual Pointer (vptr)**: A hidden pointer in each object pointing to the vtable of its actual (runtime) class.
+
+---
 
 ## 🧱 Class Hierarchy Example
 
 ```cpp
+#include <iostream>
+using namespace std;
+
 class A {
 public:
-    virtual void f1() { std::cout << "A::f1\n"; }
-    void f2()         { std::cout << "A::f2\n"; }
-    void f3()         { std::cout << "A::f3\n"; }
+    virtual void f1() { cout << "A::f1\n"; }
+    void f2()          { cout << "A::f2\n"; }
+    void f3()          { cout << "A::f3\n"; }
 };
 
 class B : public A {
 public:
-    void f1() override { std::cout << "B::f1\n"; }
-    virtual void f2()  { std::cout << "B::f2\n"; }
-    void f3()          { std::cout << "B::f3\n"; }
+    void f1() override { cout << "B::f1\n"; }  // Overrides A::f1 (still virtual)
+    virtual void f2()  { cout << "B::f2\n"; }  // Introduces virtual f2
+    void f3()          { cout << "B::f3\n"; }
 };
 
 class C : public B {
 public:
-    void f1() override { std::cout << "C::f1\n"; }
-    void f2() override { std::cout << "C::f2\n"; }
-    virtual void f3()  { std::cout << "C::f3\n"; }
+    void f1() override { cout << "C::f1\n"; }  // Overrides B::f1 (virtual)
+    void f2() override { cout << "C::f2\n"; }  // Overrides B::f2 (virtual)
+    virtual void f3()  { cout << "C::f3\n"; }  // Introduces virtual f3
 };
-
-class D : public C {
-public:
-    void f1() override { std::cout << "D::f1\n"; }
-    void f2() override { std::cout << "D::f2\n"; }
-    void f3() override { std::cout << "D::f3\n"; }
-};
-
-int main() {
-    A* obj = new C();
-    obj->f1(); // C::f1 dynamic binding (virtual)
-    obj->f2(); // A::f2 static binding (non-virtual in A)
-    obj->f3(); // A::f3 static binding (non-virtual in A)
-
-    B* obj2 = new D();
-    obj2->f1(); // D::f1 dynamic binding (virtual dispatch)
-    obj2->f2(); // D::f2 dynamic binding (virtual dispatch)
-    obj2->f3(); // B::f3 static binding (non-virtual in B)
-}
 ```
-
-## 🧠 What is a Virtual Table (vtable)?
-
-A **vtable** is a lookup table maintained per class that contains addresses of the virtual functions that objects of that class can call.
-
-* Every class with **at least one virtual function** gets its own vtable.
-* Each entry in the vtable is a function pointer to the most derived implementation of a virtual function.
-
-### 🧾 For This Example:
-
-* `A` has a vtable: `[ &A::f1 ]`
-* `B` has a vtable: `[ &B::f1, &B::f2 ]`
-* `C` has a vtable: `[ &C::f1, &C::f2, &C::f3 ]`
-* `D` has a vtable: `[ &D::f1, &D::f2, &D::f3 ]`
-
-Each vtable is generated **at compile time** and shared across all instances of a class at runtime.
-
-## 📌 What is a Virtual Pointer (vptr)?
-
-A **vptr** is a hidden pointer inside each object that points to the vtable of its actual class.
-
-* It is automatically set up by the constructor of the object.
-* It ensures that the correct vtable is used based on the actual object type (not the pointer type).
-
-### Example:
+### 👇 Sample Usage
 
 ```cpp
 A* obj1 = new C();
+obj1->f1();   // ✅ virtual → dynamic dispatch → C::f1
+obj1->f2();   // ❌ non-virtual in A → static dispatch → A::f2
+obj1->f3();   // ❌ non-virtual in A → static dispatch → A::f3
+
+A* obj2 = new B();
+obj2->f1();   // ✅ virtual in A → dynamic dispatch → B::f1
+obj2->f2();   // ❌ non-virtual in A → static dispatch → A::f2
+obj2->f3();   // ❌ non-virtual in A → static dispatch → A::f3
+
+B* obj3 = new C();
+obj3->f1();   // ✅ virtual in A → dynamic dispatch → C::f1
+obj3->f2();   // ✅ virtual in B → dynamic dispatch → C::f2
+obj3->f3();   // ❌ non-virtual in B → static dispatch → B::f3
 ```
 
-Here:
+---
 
-* The actual object is of type `C`, so `obj1->vptr` points to `C`'s vtable.
-* This enables `obj1->f1()` to dynamically dispatch to `C::f1()` even though `obj1` is of type `A*`.
+## 🧠 Virtual Table (vtable)
 
-### Another Example:
+* The **vtable** is a table maintained by the compiler.
+* It stores addresses of the most derived (runtime) implementations of virtual functions.
+* Each class with at least one virtual function has its own vtable.
+* It is **shared** by all instances of the same class.
 
-```cpp
-B* obj2 = new D();
+### 📌 vtable for Each Class
+
+| Class | vtable Contents     |
+| ----- | ------------------- |
+| A     | A::f1               |
+| B     | B::f1, B::f2        |
+| C     | C::f1, C::f2, C::f3 |
+
+## 🧷 Virtual Pointer (vptr)
+
+* The **vptr** is a hidden pointer inside every object of a class with virtual functions.
+* It points to the vtable of the actual class of the object (not necessarily the pointer type).
+* Automatically set in the constructor of the most derived class.
+
+---
+
+## 🔄 Static vs Dynamic Dispatch
+
+When calling a method through a base class pointer:
+
+1. **Check if the method is `virtual` in the pointer's static type (e.g., `Base*`)**:
+
+   * ✅ If **yes** → Use **vptr → vtable** to dispatch dynamically.
+   * ❌ If **no** → Call base method directly (**static dispatch**).
+
+### 👁️ In Our Example
+
+* `obj1->f1()` → `A::f1` is virtual → vptr → C::f1 is called ✅
+* `obj1->f2()` → `A::f2` is not virtual → A::f2 is called ❌
+* `obj1->f3()` → `A::f3` is not virtual → A::f3 is called ❌
+
+---
+
+## 🧮 Memory Layout Visualization
+
+Let's visualize `A* obj = new C();`
+
+```
++------------------+
+| vptr ----------> |-------------------+
+|                  |                   |
+|  data members    |                   v
++------------------+         +--------------------+
+                           | vtable for class C  |
+                           +--------------------+
+                           | C::f1               |
+                           | C::f2               |
+                           | C::f3               |
+                           +--------------------+
 ```
 
-* The actual object is of type `D`, so `obj2->vptr` points to `D`'s vtable.
-* This enables dynamic dispatch to `D::f1()` and `D::f2()` because both are virtual in base classes.
+---
 
-## 🧩 Summary
+## 📊 Examble Summary Table
 
-| Object | Static Type | Dynamic Type | vptr Points To | f1()      | f2()      | f3()      |
-| ------ | ----------- | ------------ | -------------- | --------- | --------- | --------- |
-| `obj1` | `A*`        | `C`          | `C`'s vtable   | `C::f1()` | `A::f2()` | `A::f3()` |
-| `obj2` | `B*`        | `D`          | `D`'s vtable   | `D::f1()` | `D::f2()` | `B::f3()` |
+| Object | Function | Virtual in Base? | Dispatch Type | Function Called | vtable Used |
+| ------ | -------- | ---------------- | ------------- | --------------- | ----------- |
+| `obj1` | `f1()`   | Yes (in A)       | Dynamic       | `C::f1()`       | `C::vtable` |
+| `obj1` | `f2()`   | No (in A)        | Static        | `A::f2()`       | N/A         |
+| `obj1` | `f3()`   | No (in A)        | Static        | `A::f3()`       | N/A         |
+| `obj2` | `f1()`   | Yes (in A)       | Dynamic       | `B::f1()`       | `B::vtable` |
+| `obj2` | `f2()`   | No (in A)        | Static        | `A::f2()`       | N/A         |
+| `obj2` | `f3()`   | No (in A)        | Static        | `A::f3()`       | N/A         |
+| `obj3` | `f1()`   | Yes (in A)       | Dynamic       | `C::f1()`       | `C::vtable` |
+| `obj3` | `f2()`   | Yes (in B)       | Dynamic       | `C::f2()`       | `C::vtable` |
+| `obj3` | `f3()`   | No (in B)        | Static        | `B::f3()`       | N/A         |
 
-✅ Only virtual functions participate in dynamic dispatch via vtable.
-❌ Non-virtual functions are resolved at compile time (static binding).
+---
 
+## ✅ Summary
 
+* Virtual functions enable **runtime polymorphism**.
+* vtable holds function pointers to the most derived implementations.
+* vptr is per-object and set during construction.
+* If a function is **not** virtual in the pointer type, it uses **static dispatch**.
+* If it's **virtual**, then dynamic dispatch happens via **vtable lookup** using **vptr**.
 
+This mechanism is fundamental to C++'s object-oriented power!
 
 
 ### Virtual Destructors
