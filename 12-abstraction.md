@@ -99,20 +99,51 @@ By making implementation details `private` or `protected`, and exposing only nec
 
 ---
 
-## 📚 Full vs Partial Abstraction
+## 🔶 Interface Classes in C++
 
-| Type                    | Description                                    | Example                          |
-| ----------------------- | ---------------------------------------------- | -------------------------------- |
-| **Full Abstraction**    | Only pure virtual functions, no implementation | Interface-style abstract class   |
-| **Partial Abstraction** | Mix of implemented and pure virtual methods    | Base classes with reusable logic |
+While C++ does not have a dedicated `interface` keyword like Java or C#, an **interface class** can be created using an abstract class that contains **only pure virtual functions**.
+
+This technique allows us to define **contracts** — a set of methods that must be implemented by any derived class.
+
+### 📌 Characteristics of Interface Classes:
+
+* All methods are pure virtual (`= 0`)
+* No implementation is provided
+* Typically has no member variables
+* Used to enforce a consistent API across different types
+
+### 🧪 Example:
 
 ```cpp
+// This is an interface class
+class IPrintable {
+public:
+    virtual void print() = 0;
+    virtual void preview() = 0;
+};
+```
+
+Any class inheriting from `IPrintable` must implement both `print()` and `preview()` methods.
+
+---
+
+## 📚 Full vs Partial Abstraction
+
+| Type                    | Description                                                                 | Example                          |
+|-------------------------|-----------------------------------------------------------------------------|----------------------------------|
+| **Full Abstraction**    | Class with **only pure virtual functions** and **no implementation or data**. Used as an **interface**. | Interface-style abstract class   |
+| **Partial Abstraction** | Abstract class with a **combination of pure virtual**, **regular virtual**, or **non-virtual methods** and possibly data members. | Base class with shared logic     |
+
+
+```cpp
+// Interface class: full abstraction
 class FullAbstract {
 public:
     virtual void f1() = 0;
     virtual void f2() = 0;
 };
 
+// Partial abstraction
 class PartialAbstract {
 public:
     void commonLogic() {
@@ -121,6 +152,8 @@ public:
     virtual void specificTask() = 0;
 };
 ```
+
+In the example above, `FullAbstract` is an **interface class** because it contains only pure virtual functions and no implementation.
 
 ---
 
@@ -134,15 +167,6 @@ public:
 | Visibility  | Hides unwanted details from the user | Restricts direct access to data |
 
 *Both work together to improve software design.*
-
----
-
-## 🌍 Real-World Analogy
-
-Think of a **TV remote**:
-
-* You can press a button to turn on/off the TV — that’s the *interface*.
-* You **don’t need to know** how the remote sends infrared signals to the TV — that’s the *implementation*, which is **abstracted** away.
 
 ---
 
