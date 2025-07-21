@@ -1,6 +1,8 @@
 # Polymorphism in C++
 
-Polymorphism, a core concept in object-oriented programming, allows entities such as functions or objects to take multiple forms. In C++, polymorphism enables us to perform a single action in different ways. There are two main types:
+Polymorphism is a fundamental concept in object-oriented programming that allows objects or functions to take on multiple forms. In C++, polymorphism provides flexibility and reusability by allowing a single interface to be used for different data types or implementations.
+
+There are two main types:
 
 * **Compile-Time Polymorphism** (Static Binding)
 * **Runtime Polymorphism** (Dynamic Binding)
@@ -9,11 +11,11 @@ Polymorphism, a core concept in object-oriented programming, allows entities suc
 
 ## 1. Compile-Time Polymorphism
 
-This form of polymorphism is resolved during compilation. It includes:
+This form of polymorphism is resolved at **compile-time**. It includes:
 
-### Function Overloading
+### 🔄 Function Overloading
 
-Using the same function name with different parameters.
+Multiple functions with the same name but different parameter types or counts.
 
 ```cpp
 void print(int i) { std::cout << "Printing int: " << i << std::endl; }
@@ -21,9 +23,9 @@ void print(double d) { std::cout << "Printing double: " << d << std::endl; }
 void print(std::string s) { std::cout << "Printing string: " << s << std::endl; }
 ```
 
-### Operator Overloading
+### ➕ Operator Overloading
 
-Redefining operators to work with user-defined types.
+Customizing operators to work with user-defined types.
 
 ```cpp
 class Point {
@@ -41,10 +43,9 @@ public:
 
 ## 2. Runtime Polymorphism
 
-This type of polymorphism is resolved during program execution. It is achieved through **inheritance** and **method overriding**.
+This type of polymorphism is resolved **during program execution** using inheritance and virtual functions.
 
-### The Problem Without Dynamic Binding
-
+### ❌ Problem Without Virtual Functions
 When we use base class pointers or references to refer to derived class objects, and we call methods that are redefined in derived classes **without** marking them as virtual in the base class, static binding occurs:
 
 ```cpp
@@ -62,9 +63,9 @@ Animal* a = new Dog();
 a->speak(); // Output: Animal speaks
 ```
 
-This is because the function call is resolved at compile-time based on the type of pointer (`Animal*`).
+The function call is resolved at compile-time based on the type of pointer (Animal*) because speak() is not marked as virtual, resulting in static dispatch.
 
-### Solving It with Virtual Functions
+### ✅ Solution Using Virtual Functions
 
 By marking the base class method as `virtual`, we tell the compiler to enable dynamic dispatch.
 
@@ -84,11 +85,12 @@ public:
 };
 
 Animal* a = new Dog();
-a->speak(); // Output: Dog barks
+a->speak(); // Output: Dog barks (dynamic dispatch)
 ```
 
 Now, the function call is resolved at runtime using the actual object type.
 
+---
 
 # 🔍 Virtual Table (vtable) and Virtual Pointer (vptr)
 
@@ -96,8 +98,8 @@ Now, the function call is resolved at runtime using the actual object type.
 
 In C++, polymorphism allows us to call derived class methods through base class pointers or references. This is made possible by two key mechanisms:
 
-* **Virtual Table (vtable)**: A lookup table for virtual functions.
-* **Virtual Pointer (vptr)**: A hidden pointer in each object pointing to the vtable of its actual (runtime) class.
+* **vtable**: A lookup table containing addresses of virtual functions for a class.
+* **vptr**: A hidden pointer in each object pointing to the vtable of the actual class.
 
 ---
 
@@ -128,23 +130,23 @@ public:
     virtual void f3()  { cout << "C::f3\n"; }  // Introduces virtual f3
 };
 ```
-### 👇 Sample Usage
+## 👇 Usage and Behavior
 
 ```cpp
 A* obj1 = new C();
-obj1->f1();   // ✅ virtual → dynamic dispatch → C::f1
-obj1->f2();   // ❌ non-virtual in A → static dispatch → A::f2
-obj1->f3();   // ❌ non-virtual in A → static dispatch → A::f3
+obj1->f1();   // ✅ C::f1 (virtual - dynamic dispatch)
+obj1->f2();   // ❌ A::f2 (non-virtual - static dispatch)
+obj1->f3();   // ❌ A::f3 (non-virtual - static dispatch)
 
 A* obj2 = new B();
-obj2->f1();   // ✅ virtual in A → dynamic dispatch → B::f1
-obj2->f2();   // ❌ non-virtual in A → static dispatch → A::f2
-obj2->f3();   // ❌ non-virtual in A → static dispatch → A::f3
+obj2->f1();   // ✅ B::f1 (virtual - dynamic dispatch)
+obj2->f2();   // ❌ A::f2 (non-virtual - static dispatch)
+obj2->f3();   // ❌ A::f3 (non-virtual - static dispatch)
 
 B* obj3 = new C();
-obj3->f1();   // ✅ virtual in A → dynamic dispatch → C::f1
-obj3->f2();   // ✅ virtual in B → dynamic dispatch → C::f2
-obj3->f3();   // ❌ non-virtual in B → static dispatch → B::f3
+obj3->f1();   // ✅ C::f1 (virtual from A - dynamic dispatch)
+obj3->f2();   // ✅ C::f2 (virtual from B - dynamic dispatch)
+obj3->f3();   // ❌ B::f3 (non-virtual in B - static dispatch)
 ```
 
 ---
@@ -209,7 +211,7 @@ Let's visualize `A* obj = new C();`
 
 ---
 
-## 📊 Examble Summary Table
+## 🧠 Virtual Dispatch Table Summary
 
 | Object | Function | Virtual in Base? | Dispatch Type | Function Called | vtable Used |
 | ------ | -------- | ---------------- | ------------- | --------------- | ----------- |
@@ -238,7 +240,7 @@ This mechanism is fundamental to C++'s object-oriented power!
 ---
 ## 🧹 Virtual Destructors in C++
 
-### 🔥 The Problem Without Virtual Destructors
+### ❌ Problem Without Virtual Destructor
 
 In C++, when you delete an object through a pointer to its **base class**, the destructor that's actually called depends on whether the base class destructor is marked `virtual` or not.
 
@@ -292,7 +294,7 @@ Base destructor
 
 ---
 
-### ✅ Fix: Use a Virtual Destructor in the Base
+### ✅ Solution with Virtual Destructor
 
 To fix this, we declare the base destructor as `virtual`. This ensures the **correct destructor chain** is called, starting from the derived class down to the base.
 
