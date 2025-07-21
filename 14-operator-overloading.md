@@ -270,7 +270,7 @@ int main() {
 
 ---
 
-## 9. 🧭 Pointer-like Operator
+## 9. 👈 Pointer-like Operator
 
 **Operator:** `->`
 **Overloading:** Member function only
@@ -326,7 +326,7 @@ int main() {
 ---
 
 
-### 5. 🎯 Logical Operators
+### 11. 🎯 Logical Operators
 
 **Operators:** `&&`, `||`, `!`
 
@@ -375,27 +375,32 @@ int main() {
 
 ---
 
-## ❌ Non-overloadable Operators (for reference)
+## ❌ Non-Overloadable Operators
 
-* `.` (member access)
-* `.*` (pointer-to-member)
-* `::` (scope resolution)
-* `?:` (ternary conditional)
-* `sizeof`, `typeid`
-* Cast operators: `static_cast`, `dynamic_cast`, `reinterpret_cast`, `const_cast`
+| Operator                    | Reason                           |
+| --------------------------- | -------------------------------- |
+| `.`                         | Member access (fixed behavior)   |
+| `.*`                        | Member pointer access            |
+| `::`                        | Scope resolution                 |
+| `?:`                        | Ternary operator                 |
+| `sizeof`                    | Compile-time operator            |
+| Casts (`static_cast`, etc.) | Use conversion functions instead |
 
 ---
 
 ## ✅ Summary Table
 
-| Category      | Operators               | Overload Method  |
-| ------------- | ----------------------- | ---------------- |
-| Arithmetic    | `+`, `-`, `*`, `/`, `%` | Member / Friend  |
-| Compound      | `+=`, `-=`, etc.        | Member only      |
-| Unary         | `++`, `--`, `-`, `!`    | Member preferred |
-| Comparison    | `==`, `!=`, `<`, etc.   | Member / Friend  |
-| Assignment    | `=`                     | Member only      |
-| Stream        | `<<`, `>>`              | Friend only      |
-| Subscript     | `[]`                    | Member only      |
-| Function call | `()`                    | Member only      |
-
+| Category            | Operators                  | Overloadable As           |                 |             |
+| ------------------- | -------------------------- | ------------------------- | --------------- | ----------- |
+| Arithmetic          | `+`, `-`, `*`, `/`, `%`    | Member / Friend           |                 |             |
+| Compound Assignment | `+=`, `-=`, etc.           | Member only               |                 |             |
+| Unary               | `++`, `--`, `-`, `!`       | Member preferred          |                 |             |
+| Comparison          | `==`, `!=`, `<`, `>`, etc. | Member / Friend           |                 |             |
+| Logical             | `&&`, \`                   |                           | `, `!\`         | Member only |
+| Bitwise             | `&`, \`                    | `, `^`, `\~`, `<<`, `>>\` | Member / Friend |             |
+| Assignment          | `=`                        | Member only               |                 |             |
+| Stream I/O          | `<<`, `>>`                 | Friend only               |                 |             |
+| Subscript           | `[]`                       | Member only               |                 |             |
+| Function Call       | `()`                       | Member only               |                 |             |
+| Pointer-like        | `->`                       | Member only               |                 |             |
+| Memory Management   | `new`, `delete`, etc.      | Static / Global           |                 |             |
