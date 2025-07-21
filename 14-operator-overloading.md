@@ -16,30 +16,17 @@ In C++, operator overloading allows us to define custom behavior for operators w
 
 * ✅ You can only overload **existing operators**.
 * ❌ You **cannot create** new operators.
-* ❌ Some operators **cannot** be overloaded: 
-    - `sizeof`
-    - `typeid`
-    - Scope resolution `::`
-    - Class member access operators (`.` and `*`)
-    - Ternary or conditional operators (`?` and `:`)
+* ❌ Some operators **cannot** be overloaded.
 
----
+## 📑 Categories of Overloadable Operators
 
-## 🛠️ Syntax for Operator Overloading
-
-Operator overloading can be done:
-
-* **As a member function**
-* **As a non-member friend function**
-
----
-
-## 1. 🔢 Arithmetic Binary Operators
+## 1. 🧮 Arithmetic Operators
 
 **Operators:** `+`, `-`, `*`, `/`, `%`
 **Overloading:** Member or friend function
+* Must return a new object for immutable behavior.
 
-### Example: `+` Operator as Member Function
+### ✅ Example: `+` operator as a **member function**
 
 ```cpp
 class Point {
@@ -67,10 +54,10 @@ int main() {
 
 ## 2. ➕ Compound Assignment Operators
 
-**Operators:** `+=`, `-=`, `*=`, `/=`, `%=`
+**Operators:** `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
 **Overloading:** Must be a member function
 
-### Example: `+=` Operator
+### ✅ Example: `+=` as a **member function**
 
 ```cpp
 class Point {
@@ -130,13 +117,15 @@ int main() {
 ```
 
 ---
-
-## 4. 🧪 Comparison Operators
+## 4. ⚖️ Comparison Operators
 
 **Operators:** `==`, `!=`, `<`, `>`, `<=`, `>=`
 **Overloading:** Member or friend function
 
-### Example: `==` Operator as Friend Function
+* Typically return `bool`
+* Often implemented as **friend**.
+
+### ✅ Example: `==` as a **friend function**
 
 ```cpp
 class Point {
@@ -185,12 +174,12 @@ int main() {
 
 ---
 
-## 6. 🔢 Assignment Operator
+### 6. 🔁 Assignment Operator
 
 **Operator:** `=`
 **Overloading:** Member function only
 
-### Example: Assignment Operator
+### ✅ Example: `=` as a **member function**
 
 ```cpp
 class Point {
@@ -278,6 +267,122 @@ int main() {
     p(); // Point: (3, 4)
 }
 ```
+
+---
+
+## 9. 🧭 Pointer-like Operator
+
+**Operator:** `->`
+**Overloading:** Member function only
+* Used in smart pointers
+
+#### ✅ Example: `->` as a **member function**
+
+```cpp
+class Wrapper {
+    Point* ptr;
+public:
+    Wrapper(Point* p) : ptr(p) {}
+    Point* operator->() { return ptr; }
+};
+
+int main() {
+    Point* raw = new Point(5, 6);
+    Wrapper w(raw);
+    int x = w->x; // Access Point's x
+}
+```
+
+---
+## 10. 🧹 Memory Management Operators
+
+**Operators:** `new`, `delete`, `new[]`, `delete[]`
+
+* Overload as **static** or **global** functions
+
+#### ✅ Example: Overloading `new` and `delete`
+
+```cpp
+class Point {
+public:
+    int x, y;
+    void* operator new(size_t size) {
+        std::cout << "Custom new\n";
+        return ::operator new(size);
+    }
+
+    void operator delete(void* ptr) {
+        std::cout << "Custom delete\n";
+        ::operator delete(ptr);
+    }
+};
+
+int main() {
+    Point* p = new Point();
+    delete p;
+}
+```
+
+---
+
+
+### 5. 🎯 Logical Operators
+
+**Operators:** `&&`, `||`, `!`
+
+* Usually return `bool`
+
+#### ✅ Example: `!` as a **member function**
+
+```cpp
+class Point {
+public:
+    int x, y;
+    bool operator!() const {
+        return x == 0 && y == 0;
+    }
+};
+
+int main() {
+    Point p;
+    if (!p) {
+        // point is origin
+    }
+}
+```
+
+### 6. 🧠 Bitwise Operators
+
+**Operators:** `&`, `|`, `^`, `~`, `<<`, `>>`
+
+#### ✅ Example: `&` as a **friend function**
+
+```cpp
+class Point {
+public:
+    int x, y;
+    Point(int x = 0, int y = 0) : x(x), y(y) {}
+    friend Point operator&(const Point& a, const Point& b) {
+        return Point(a.x & b.x, a.y & b.y);
+    }
+};
+
+int main() {
+    Point p1(6, 3), p2(4, 1);
+    Point result = p1 & p2;
+}
+```
+
+---
+
+## ❌ Non-overloadable Operators (for reference)
+
+* `.` (member access)
+* `.*` (pointer-to-member)
+* `::` (scope resolution)
+* `?:` (ternary conditional)
+* `sizeof`, `typeid`
+* Cast operators: `static_cast`, `dynamic_cast`, `reinterpret_cast`, `const_cast`
 
 ---
 
