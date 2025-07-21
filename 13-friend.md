@@ -1,4 +1,4 @@
-## 📘 `friend` Keyword (Function and Class)
+## 🤝 `friend` Keyword (Function and Class)
 
 ### 🔹 What is `friend` in C++?
 
