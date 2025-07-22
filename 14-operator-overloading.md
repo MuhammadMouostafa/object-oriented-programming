@@ -215,8 +215,8 @@ int& operator[](int index) {
 Point p(10, 20);
 p[0] = 5;   // x becomes 5
 p[1] = 7;   // y becomes 7
-std::cout << p[0] << std::enddl; // Outputs: 5
-std::cout << p[1] << std::enddl; // Outputs: 7
+std::cout << p[0] << std::endl; // Outputs: 5
+std::cout << p[1] << std::endl; // Outputs: 7
 ```
 
 ### 🔹 Function Call Operator `()`
@@ -247,52 +247,6 @@ Point operator,(const Point& other) {
 ```cpp
 Point a(1, 2), b(3, 4);
 Point c = (a, b);  // returns b
-```
-
-### 🔹 Pointer-to-member Operator `->*`
-
-#### 📌 Purpose
-The `->*` operator is used to access a **member of a class through a pointer-to-member**, using an instance of the class or a wrapper.
-
-#### 🧠 Concept
-It applies a pointer-to-member (data or function) to an object.  
-This operator is rarely overloaded, but it can be useful for wrapper or smart object designs.
-
-### ✅ Overload Declaration
-```cpp
-ReturnType operator->*(MemberType ClassType::*ptr);
-```
-
-#### ✅ Example
-```cpp
-#include <iostream>
-
-class MyClass {
-public:
-    int data;
-    MyClass(int d) : data(d) {}
-};
-
-class Wrapper {
-    MyClass obj;
-
-public:
-    Wrapper(int d) : obj(d) {}
-
-    // Overload ->* to access MyClass members via pointer-to-member
-    int& operator->*(int MyClass::*ptr) {
-        return obj.*ptr;
-    }
-};
-```
-
-#### 👇 Usage and Behavior
-```cpp
-int main() {
-    Wrapper w(42);
-    int MyClass::*ptr = &MyClass::data;
-    std::cout << (w->*ptr) << std::endl;  // Output: 42
-}
 ```
 
 ## B. Operators That Must Be Overloaded as Member Functions
