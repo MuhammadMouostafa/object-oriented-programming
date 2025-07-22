@@ -1,10 +1,10 @@
-# 📘 Operator Overloading
+# ⚙️ Operator Overloading
 
 In C++, **operator overloading** allows you to redefine the behavior of built-in operators when used with user-defined types like classes.
 
 ---
 
-## 🔹 Why Use Operator Overloading?
+## 🧩 Why Use Operator Overloading?
 
 * Makes user-defined types behave like built-in types
 * Enhances code readability and usability
@@ -12,7 +12,7 @@ In C++, **operator overloading** allows you to redefine the behavior of built-in
 
 ---
 
-## ⚙️ General Syntax of Operator Overloading
+## 🛠️ General Syntax of Operator Overloading
 There are two main ways to overload the `+` operator:
 
 
