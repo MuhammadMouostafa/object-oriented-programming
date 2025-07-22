@@ -1,406 +1,477 @@
-# ⚙️ Operator Overloading
+# 📘 Operator Overloading
 
-In C++, operator overloading allows us to define custom behavior for operators when applied to user-defined types like classes or structs. This makes code involving custom types more intuitive and readable.
-
----
-
-## 🤔 Why Use Operator Overloading?
-
-* To make user-defined types behave like built-in types.
-* Improve readability and usability of your classes.
-* Allow intuitive syntax for complex operations (e.g., matrix addition, complex numbers).
+In C++, **operator overloading** allows you to redefine the behavior of built-in operators when used with user-defined types like classes.
 
 ---
 
-## 🧩 Rules & Guidelines
+## 🔹 Why Use Operator Overloading?
 
-* ✅ You can only overload **existing operators**.
-* ❌ You **cannot create** new operators.
-* ❌ Some operators **cannot** be overloaded.
+* Makes user-defined types behave like built-in types
+* Enhances code readability and usability
+* Provides syntactic sugar to simplify object manipulations
 
-## 📑 Categories of Overloadable Operators
+---
 
-## 1. 🧮 Arithmetic Operators
+## ⚙️ General Syntax of Operator Overloading
+There are two main ways to overload the `+` operator:
 
-**Operators:** `+`, `-`, `*`, `/`, `%`
-**Overloading:** Member or friend function
-* Must return a new object for immutable behavior.
 
-### ✅ Example: `+` operator as a **member function**
+### ✅ 1. Member Function (Inside the Class)
 
+Used when the left-hand operand must be a class object. Has access to private members.
+
+
+#### ✅ Example
 ```cpp
 class Point {
-public:
+private:
     int x, y;
+public:
     Point(int x = 0, int y = 0) : x(x), y(y) {}
 
     Point operator+(const Point& other) const {
         return Point(x + other.x, y + other.y);
     }
-
-    void display() const {
-        std::cout << "(" << x << ", " << y << ")\n";
-    }
 };
-
-int main() {
-    Point p1(2, 3), p2(4, 5);
-    Point result = p1 + p2;
-    result.display(); // (6, 8)
-}
 ```
 
----
+### ✅ 2. Non-Member Function (Outside the Class)
 
-## 2. ➕ Compound Assignment Operators
+- Useful when You want symmetry for operations like `a + b` where `a` might `not` be an object of the class (e.g. `int + Point`)
+- Must be made `friend` if `private` members need to be accessed
 
-**Operators:** `+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
-**Overloading:** Must be a member function
-
-### ✅ Example: `+=` as a **member function**
-
+#### ✅ Example with Public Members
 ```cpp
 class Point {
 public:
     int x, y;
     Point(int x = 0, int y = 0) : x(x), y(y) {}
-
-    Point& operator+=(const Point& other) {
-        x += other.x;
-        y += other.y;
-        return *this;
-    }
-
-    void display() const {
-        std::cout << "(" << x << ", " << y << ")\n";
-    }
 };
 
-int main() {
-    Point p1(1, 2), p2(3, 4);
-    p1 += p2;
-    p1.display(); // (4, 6)
+Point operator+(const Point& a, const Point& b) {
+    return Point(a.x + b.x, a.y + b.y);
 }
+
 ```
-
----
-
-## 3. 🔢 Arithmetic Unary Operators
-
-**Operators:** `++`, `--`, `-`, `!`
-**Overloading:** Member function preferred
-
-### Example: Prefix `++`
-
+#### ✅ Example with Private Members (Using Friend)
 ```cpp
 class Point {
-public:
+private:
     int x, y;
+public:
     Point(int x = 0, int y = 0) : x(x), y(y) {}
 
-    Point& operator++() {
-        ++x;
-        ++y;
-        return *this;
-    }
-
-    void display() const {
-        std::cout << "(" << x << ", " << y << ")\n";
-    }
+    friend Point operator+(const Point& a, const Point& b);
 };
 
-int main() {
-    Point p(5, 6);
-    ++p;
-    p.display(); // (6, 7)
+Point operator+(const Point& a, const Point& b) {
+    return Point(a.x + b.x, a.y + b.y);
 }
 ```
 
----
-## 4. ⚖️ Comparison Operators
-
-**Operators:** `==`, `!=`, `<`, `>`, `<=`, `>=`
-**Overloading:** Member or friend function
-
-* Typically return `bool`
-* Often implemented as **friend**.
-
-### ✅ Example: `==` as a **friend function**
-
+### 👇 Usage and Behavior
 ```cpp
-class Point {
-public:
-    int x, y;
-    Point(int x = 0, int y = 0) : x(x), y(y) {}
-
-    friend bool operator==(const Point& a, const Point& b) {
-        return a.x == b.x && a.y == b.y;
-    }
-};
-
-int main() {
-    Point p1(3, 4), p2(3, 4);
-    std::cout << (p1 == p2) << "\n"; // 1 (true)
-}
+Point p1(1, 2), p2(3, 4);
+Point p3 = p1 + p2; // p3: (4, 6)
 ```
 
 ---
 
-## 5. 📄 Stream Operators
+# 📊 Categorization of Overloadable Operators
 
-**Operators:** `<<`, `>>`
-**Overloading:** Friend function only
+## A. Operators That Can Be Overloaded as Member or Non-member Functions
+These operators support both forms because they work with two operands and don't depend on being called from the class instance.
 
-### Example: Output `<<` Operator
+### 🔹 Arithmetic Operators
 
+`+`, `-`, `*`, `/`, `%`
+
+#### ✅ Example
+```cpp
+Point operator+(const Point& other) const {
+    return Point(x + other.x, y + other.y);
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point a(2, 3), b(4, 1);
+Point c = a + b;  // (6, 4)
+```
+
+### 🔹 Bitwise Operators
+
+`&`, `|`, `^`, `~`, `<<`, `>>`
+
+#### ✅ Example
+```cpp
+Point operator&(const Point& other) const {
+    return Point(x & other.x, y & other.y);
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point a(3, 6), b(1, 4);
+Point c = a & b;  // (1, 4)
+```
+
+### 🔹 Relational Operators
+
+`==`, `!=`, `<`, `>`, `<=`, `>=`
+
+#### ✅ Example
+```cpp
+bool operator==(const Point& other) const {
+    return x == other.x && y == other.y;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point a(1, 2), b(1, 2);
+std::cout << (a == b);  // 1 (true)
+```
+
+### 🔹 Logical Operators
+
+`&&`, `||`, `!`
+
+#### ✅ Example
+```cpp
+bool operator!() const {
+    return x == 0 && y == 0;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p(0, 0);
+if (!p) std::cout << "Point is at origin\n";
+```
+
+### 🔹 Increment / Decrement Operators
+
+`++`, `--` (both prefix and postfix)
+
+#### ✅ Example
+```cpp
+// Prefix ++p
+Point& operator++() {
+    ++x;
+    ++y;
+    return *this;
+}
+
+// Postfix p++
+Point operator++(int) {
+    Point temp = *this;
+    ++x;
+    ++y;
+    return temp;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p1(1, 1);
+Point p2(1, 1);
+
+std::cout << ++p1 << std::endl;  // Outputs: (2, 2); p1 becomes (2, 2)
+std::cout << p2++ << std::endl;  // Outputs: (1, 1); p2 becomes (2, 2)
+```
+
+### 🔹 Compound Assignment Operators
+
+`+=`, `-=`, `*=`, `/=`, `%=`, `&=`, `|=`, `^=`, `<<=`, `>>=`
+
+#### ✅ Example
+```cpp
+Point& operator+=(const Point& other) {
+    x += other.x;
+    y += other.y;
+    return *this;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p(1, 2), q(3, 4);
+p += q;    // (4, 6)
+p.print();
+```
+
+### 🔹 Subscript Operator `[]`
+
+#### ✅ Example
+```cpp
+int& operator[](int index) {
+    return (index == 0) ? x : y;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p(10, 20);
+p[0] = 5;   // x becomes 5
+p[1] = 7;   // y becomes 7
+std::cout << p[0] << std::enddl; // Outputs: 5
+std::cout << p[1] << std::enddl; // Outputs: 7
+```
+
+### 🔹 Function Call Operator `()`
+
+#### ✅ Example
+```cpp
+void operator()() const {
+    std::cout << "Point(" << x << ", " << y << ")\n";
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p(1, 2);
+p();  // Outputs: "Point: (1, 2)"
+```
+
+### 🔹 Comma Operator `,`
+
+#### ✅ Example
+```cpp
+Point operator,(const Point& other) {
+    return other;  // returns rightmost argument
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point a(1, 2), b(3, 4);
+Point c = (a, b);  // returns b
+```
+
+### 🔹 Pointer-to-member Operator `->*`
+
+#### 📌 Purpose
+The `->*` operator is used to access a **member of a class through a pointer-to-member**, using an instance of the class or a wrapper.
+
+#### 🧠 Concept
+It applies a pointer-to-member (data or function) to an object.  
+This operator is rarely overloaded, but it can be useful for wrapper or smart object designs.
+
+### ✅ Overload Declaration
+```cpp
+ReturnType operator->*(MemberType ClassType::*ptr);
+```
+
+#### ✅ Example
 ```cpp
 #include <iostream>
-class Point {
-public:
-    int x, y;
-    Point(int x = 0, int y = 0) : x(x), y(y) {}
 
-    friend std::ostream& operator<<(std::ostream& os, const Point& p) {
-        os << "(" << p.x << ", " << p.y << ")";
-        return os;
-    }
+class MyClass {
+public:
+    int data;
+    MyClass(int d) : data(d) {}
 };
 
-int main() {
-    Point p(2, 3);
-    std::cout << p << "\n"; // (2, 3)
-}
-```
-
----
-
-### 6. 🔁 Assignment Operator
-
-**Operator:** `=`
-**Overloading:** Member function only
-
-### ✅ Example: `=` as a **member function**
-
-```cpp
-class Point {
-public:
-    int x, y;
-    Point(int x = 0, int y = 0) : x(x), y(y) {}
-
-    Point& operator=(const Point& other) {
-        if (this != &other) {
-            x = other.x;
-            y = other.y;
-        }
-        return *this;
-    }
-
-    void display() const {
-        std::cout << "(" << x << ", " << y << ")\n";
-    }
-};
-
-int main() {
-    Point p1(7, 8), p2;
-    p2 = p1;
-    p2.display(); // (7, 8)
-}
-```
-
----
-
-## 7. 🔍 Subscript Operator
-
-**Operator:** `[]`
-**Overloading:** Member function only
-
-### Example: `[]` to access x or y
-
-```cpp
-class Point {
-    int coords[2];
-public:
-    Point(int x = 0, int y = 0) {
-        coords[0] = x;
-        coords[1] = y;
-    }
-
-    int& operator[](int index) {
-        return coords[index];
-    }
-
-    void display() const {
-        std::cout << "(" << coords[0] << ", " << coords[1] << ")\n";
-    }
-};
-
-int main() {
-    Point p(10, 20);
-    p[0] = 5;
-    p[1] = 15;
-    p.display(); // (5, 15)
-}
-```
-
----
-
-## 8. 📞 Function Call Operator
-
-**Operator:** `()`
-**Overloading:** Member function only
-
-### Example: Call Point as function
-
-```cpp
-class Point {
-public:
-    int x, y;
-    Point(int x = 0, int y = 0) : x(x), y(y) {}
-
-    void operator()() const {
-        std::cout << "Point: (" << x << ", " << y << ")\n";
-    }
-};
-
-int main() {
-    Point p(3, 4);
-    p(); // Point: (3, 4)
-}
-```
-
----
-
-## 9. 👈 Pointer-like Operator
-
-**Operator:** `->`
-**Overloading:** Member function only
-* Used in smart pointers
-
-#### ✅ Example: `->` as a **member function**
-
-```cpp
 class Wrapper {
-    Point* ptr;
-public:
-    Wrapper(Point* p) : ptr(p) {}
-    Point* operator->() { return ptr; }
-};
+    MyClass obj;
 
+public:
+    Wrapper(int d) : obj(d) {}
+
+    // Overload ->* to access MyClass members via pointer-to-member
+    int& operator->*(int MyClass::*ptr) {
+        return obj.*ptr;
+    }
+};
+```
+
+#### 👇 Usage and Behavior
+```cpp
 int main() {
-    Point* raw = new Point(5, 6);
-    Wrapper w(raw);
-    int x = w->x; // Access Point's x
+    Wrapper w(42);
+    int MyClass::*ptr = &MyClass::data;
+    std::cout << (w->*ptr) << std::endl;  // Output: 42
 }
 ```
 
----
-## 10. 🧹 Memory Management Operators
+## B. Operators That Must Be Overloaded as Member Functions
+These operators require a class instance to be on the left-hand side, or they perform operations that directly affect the class's internal behavior.
+
+### 🔹 Assignment Operator `=`
+
+#### ✅ Example
+```cpp
+Point& operator=(const Point& other) {
+    x = other.x;
+    y = other.y;
+    return *this;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p1(7, 8), p2;
+p2 = p1; // p2 now is (7, 8)
+```
+
+### 🔹 Member Access Operator `->`
+
+#### 📌 Purpose
+The `->` operator is used to access members via a pointer.
+It is often overloaded in smart pointer or proxy classes.
+
+#### 🧠 Concept
+- Overloading `->` allows your class to behave like a pointer.
+- The returned object must itself support `.` or `->`.
+
+### ✅ Overload Declaration
+```cpp
+ClassType* operator->();
+```
+
+#### ✅ Example
+```cpp
+#include <iostream>
+
+class MyClass {
+public:
+    void greet() {
+        std::cout << "Hello from MyClass!" << std::endl;
+    }
+};
+
+class SmartPointer {
+    MyClass* ptr;
+
+public:
+    SmartPointer(MyClass* p) : ptr(p) {}
+
+    MyClass* operator->() {
+        return ptr;
+    }
+};
+```
+
+#### 👇 Usage and Behavior
+```cpp
+int main() {
+    MyClass real;
+    SmartPointer sp(&real);
+    sp->greet();  // Output: Hello from MyClass!
+}
+```
+
+### 🔹 Memory Management Operators
 
 **Operators:** `new`, `delete`, `new[]`, `delete[]`
 
-* Overload as **static** or **global** functions
+These operators can be overloaded to customize how memory is allocated and deallocated for objects of a class.
 
-#### ✅ Example: Overloading `new` and `delete`
+* Must be overloaded as `static` member functions.
+* Cannot be non-member functions.
+
+---
+
+#### ✅ Declaration & Implementation
 
 ```cpp
-class Point {
+class MyClass {
 public:
-    int x, y;
-    void* operator new(size_t size) {
-        std::cout << "Custom new\n";
-        return ::operator new(size);
+    int x;
+
+    MyClass(int val) : x(val) {
+        std::cout << "Constructor called\n";
     }
 
-    void operator delete(void* ptr) {
+    ~MyClass() {
+        std::cout << "Destructor called\n";
+    }
+
+    // Overload operator new
+    static void* operator new(size_t size) {
+        std::cout << "Custom new for size: " << size << std::endl;
+        return ::operator new(size); // Use global new
+    }
+
+    // Overload operator delete
+    static void operator delete(void* ptr) {
         std::cout << "Custom delete\n";
-        ::operator delete(ptr);
+        ::operator delete(ptr); // Use global delete
+    }
+
+    // Overload operator new[]
+    static void* operator new[](size_t size) {
+        std::cout << "Custom new[] for size: " << size << std::endl;
+        return ::operator new[](size);
+    }
+
+    // Overload operator delete[]
+    static void operator delete[](void* ptr) {
+        std::cout << "Custom delete[]\n";
+        ::operator delete[](ptr);
     }
 };
-
-int main() {
-    Point* p = new Point();
-    delete p;
-}
 ```
 
----
-
-
-### 11. 🎯 Logical Operators
-
-**Operators:** `&&`, `||`, `!`
-
-* Usually return `bool`
-
-#### ✅ Example: `!` as a **member function**
+#### 👇 Usage and Behavior
 
 ```cpp
-class Point {
-public:
-    int x, y;
-    bool operator!() const {
-        return x == 0 && y == 0;
-    }
-};
-
 int main() {
-    Point p;
-    if (!p) {
-        // point is origin
-    }
+    MyClass* obj = new MyClass(10);     // Triggers overloaded new
+    delete obj;                          // Triggers overloaded delete
+
+    MyClass* arr = new MyClass[2]{ {1}, {2} }; // Triggers overloaded new[]
+    delete[] arr;                                 // Triggers overloaded delete[]
+    return 0;
 }
 ```
 
-### 6. 🧠 Bitwise Operators
 
-**Operators:** `&`, `|`, `^`, `~`, `<<`, `>>`
+---
 
-#### ✅ Example: `&` as a **friend function**
+## C. Operators That Must Be Overloaded as Non-member Functions
+These operators cannot be members because the left-hand operand is not an object of your class.
 
+### 🔹 Stream Insertion / Extraction `<<`, `>>`
+
+#### ✅ Example
 ```cpp
-class Point {
-public:
-    int x, y;
-    Point(int x = 0, int y = 0) : x(x), y(y) {}
-    friend Point operator&(const Point& a, const Point& b) {
-        return Point(a.x & b.x, a.y & b.y);
-    }
-};
-
-int main() {
-    Point p1(6, 3), p2(4, 1);
-    Point result = p1 & p2;
+std::ostream& operator<<(std::ostream& os, const Point& pt) {
+    os << "(" << pt.x << ", " << pt.y << ")";
+    return os;
 }
+
+std::istream& operator>>(std::istream& is, Point& pt) {
+    is >> pt.x >> pt.y;
+    return is;
+}
+```
+
+#### 👇 Usage and Behavior
+```cpp
+Point p;
+std::cin >> p;
+std::cout << p;
 ```
 
 ---
 
-## ❌ Non-Overloadable Operators
+## ❌ D. Operators That Cannot Be Overloaded  
+These operators are part of the core language syntax and behavior. C++ does not allow them to be overloaded.
 
-| Operator                    | Reason                           |
-| --------------------------- | -------------------------------- |
-| `.`                         | Member access (fixed behavior)   |
-| `.*`                        | Member pointer access            |
-| `::`                        | Scope resolution                 |
-| `?:`                        | Ternary operator                 |
-| `sizeof`                    | Compile-time operator            |
-| Casts (`static_cast`, etc.) | Use conversion functions instead |
+- `::` (Scope resolution)  
+- `.` (Member access)  
+- `.*` (Pointer-to-member access)  
+- `?:` (Ternary conditional)  
+- `sizeof`  
+- `typeid`  
+- `alignof`  
+- `noexcept`  
+- `static_cast`  
+- `dynamic_cast`  
+- `reinterpret_cast`  
+- `const_cast`  
+- `co_await`
 
----
 
-## ✅ Summary Table
-
-| Category            | Operators                  | Overloadable As           |                 |             |
-| ------------------- | -------------------------- | ------------------------- | --------------- | ----------- |
-| Arithmetic          | `+`, `-`, `*`, `/`, `%`    | Member / Friend           |                 |             |
-| Compound Assignment | `+=`, `-=`, etc.           | Member only               |                 |             |
-| Unary               | `++`, `--`, `-`, `!`       | Member preferred          |                 |             |
-| Comparison          | `==`, `!=`, `<`, `>`, etc. | Member / Friend           |                 |             |
-| Logical             | `&&`, \`                   |                           | `, `!\`         | Member only |
-| Bitwise             | `&`, \`                    | `, `^`, `\~`, `<<`, `>>\` | Member / Friend |             |
-| Assignment          | `=`                        | Member only               |                 |             |
-| Stream I/O          | `<<`, `>>`                 | Friend only               |                 |             |
-| Subscript           | `[]`                       | Member only               |                 |             |
-| Function Call       | `()`                       | Member only               |                 |             |
-| Pointer-like        | `->`                       | Member only               |                 |             |
-| Memory Management   | `new`, `delete`, etc.      | Static / Global           |                 |             |
